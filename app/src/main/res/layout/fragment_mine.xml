@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:background="@color/appBackground"
+              android:layout_height="match_parent">
+    
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:background="@mipmap/ic_my_bg"
+        android:layout_height="182dp">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/imageHead"
+                android:src="@mipmap/ic_my_head"
+                android:layout_width="72dp"
+                android:layout_height="72dp"/>
+
+            <ImageView
+                android:id="@+id/imageSex"
+                android:layout_marginRight="4dp"
+                android:layout_marginBottom="4dp"
+                android:layout_alignBottom="@+id/imageHead"
+                android:layout_alignRight="@+id/imageHead"
+                android:src="@mipmap/ic_my_boy"
+                android:layout_width="16dp"
+                android:layout_height="16dp"/>
+
+        </RelativeLayout>
+
+        <TextView
+            android:layout_marginBottom="25dp"
+            android:layout_alignParentBottom="true"
+            android:text="@string/txt_noLogin"
+            android:textColor="@android:color/white"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/tvUserName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </RelativeLayout>
+    
+    <TextView
+        android:id="@+id/tvHelp"
+        android:textColor="#565C60"
+        android:background="@android:color/white"
+        android:drawablePadding="29dp"
+        android:paddingLeft="17dp"
+        android:drawableLeft="@mipmap/ic_my_help"
+        android:gravity="center_vertical"
+        android:text="使用帮助"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_height="50dp"/>
+
+    <View
+        android:background="#E7E7E7"
+        android:layout_width="match_parent"
+        android:layout_height="1px"/>
+
+    <TextView
+        android:id="@+id/tvContactus"
+        android:textColor="#565C60"
+        android:background="@android:color/white"
+        android:drawablePadding="29dp"
+        android:paddingLeft="17dp"
+        android:drawableLeft="@mipmap/ic_my_contactus"
+        android:gravity="center_vertical"
+        android:text="联系我们"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_height="50dp"/>
+
+    <View
+        android:background="#E7E7E7"
+        android:layout_width="match_parent"
+        android:layout_height="1px"/>
+
+    <TextView
+        android:id="@+id/tvSetting"
+        android:textColor="#565C60"
+        android:background="@android:color/white"
+        android:drawablePadding="29dp"
+        android:paddingLeft="17dp"
+        android:drawableLeft="@mipmap/ic_my_setting"
+        android:gravity="center_vertical"
+        android:text="设置"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_height="50dp"/>
+
+</LinearLayout>
