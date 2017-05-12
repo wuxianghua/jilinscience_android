@@ -41,6 +41,8 @@
 
         <activity android:name=".view.LoginActivity">
         </activity>
+        <activity android:name=".view.UserInfoActivity">
+        </activity>
         <activity android:name=".view.RegisterActivity">
         </activity>
     </application>

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/appBackground">
+
+    <RelativeLayout
+        android:id="@+id/layoutBar"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="@android:color/white"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp">
+
+        <ImageView
+            android:id="@+id/userinfo_imageBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:src="@mipmap/ic_nav_back"/>
+
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="个人资料"
+            android:textColor="#2F3336"
+            android:textSize="15sp"/>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_marginTop="1dp"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:gravity="center_vertical"
+        android:background="#FFFFFF">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginLeft="15dp"
+            android:text="@string/txt_head"
+            android:textColor="@color/colorHeadImage"
+            android:textSize="15sp"/>
+        <cn.palmap.jilinscience.view.ZQRoundOvalImageView
+            android:id="@+id/iv_head_image"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:src="@mipmap/ic_my_head"
+            android:layout_marginRight="15dp"/>
+    </LinearLayout>
+
+    <LinearLayout style="@style/UserInfoStyle">
+        <TextView
+            android:text="@string/nickname"
+            style="@style/UserInfoSonStyle" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="13sp"
+            android:textColor="#94999c"
+            android:text="游客9527"
+            android:layout_marginRight="15dp"/>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/ic_my_arrow"
+            android:layout_marginRight="15dp"/>
+    </LinearLayout>
+    <LinearLayout style="@style/UserInfoStyle">
+        <TextView
+            style="@style/UserInfoSonStyle"
+            android:text="@string/txt_sex"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="13sp"
+            android:textColor="#94999c"
+            android:text="@string/txt_man"
+            android:layout_marginRight="15dp"/>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/ic_my_arrow"
+            android:layout_marginRight="15dp"/>
+    </LinearLayout>
+    <LinearLayout style="@style/UserInfoStyle">
+        <TextView
+            style="@style/UserInfoSonStyle"
+            android:text="@string/txt_birthday"
+            />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/ic_my_arrow"
+            android:layout_marginRight="15dp"/>
+    </LinearLayout>
+</LinearLayout>
