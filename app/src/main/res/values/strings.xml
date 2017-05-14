@@ -1,4 +1,10 @@
 <resources>
     <string name="app_name">JilinScience</string>
     <string name="txt_noLogin">点击登录/注册</string>
+    <string name="txt_head">头像</string>
+    <string name="nickname">昵称</string>
+    <string name="txt_sex">性别</string>
+    <string name="txt_man">男</string>
+    <string name="txt_femal">女</string>
+    <string name="txt_birthday">出生日期</string>
 </resources>

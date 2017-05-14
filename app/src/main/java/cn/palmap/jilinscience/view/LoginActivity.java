@@ -24,6 +24,7 @@ import cn.palmap.jilinscience.di.module.MainModule;
 import cn.palmap.jilinscience.factory.ServiceFactory;
 import cn.palmap.jilinscience.model.ApiCode;
 import cn.palmap.jilinscience.model.User;
+import cn.palmap.jilinscience.utils.SharedPreferenceUtils;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
@@ -116,6 +117,8 @@ public class LoginActivity extends BaseActivity {
                     @Override
                     public ObservableSource<ApiCode> apply(@NonNull final ApiCode apiCode) throws Exception {
                         if (apiCode.getError() == 0) {
+                            SharedPreferenceUtils.putValue(LoginActivity.this,"UserInfo","customId",apiCode.getMsg());
+                            SharedPreferenceUtils.putValue(LoginActivity.this,"UserInfo","phone",phone);
                             return userService.getUser(phone + ";" + apiCode.getMsg())
                                     .subscribeOn(Schedulers.computation())
                                     .observeOn(AndroidSchedulers.mainThread())

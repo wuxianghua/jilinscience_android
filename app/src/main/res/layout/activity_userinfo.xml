@@ -51,24 +51,29 @@
             android:layout_marginRight="15dp"/>
     </LinearLayout>
 
-    <LinearLayout style="@style/UserInfoStyle">
+    <LinearLayout style="@style/UserInfoStyle"
+        android:id="@+id/nick_name_ll">
         <TextView
             android:text="@string/nickname"
             style="@style/UserInfoSonStyle" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="13sp"
             android:textColor="#94999c"
             android:text="游客9527"
-            android:layout_marginRight="15dp"/>
+            android:layout_marginRight="15dp"
+            android:id="@+id/tv_nickname" />
+
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@mipmap/ic_my_arrow"
             android:layout_marginRight="15dp"/>
     </LinearLayout>
-    <LinearLayout style="@style/UserInfoStyle">
+    <LinearLayout style="@style/UserInfoStyle"
+        android:id="@+id/user_sex_ll">
         <TextView
             style="@style/UserInfoSonStyle"
             android:text="@string/txt_sex"

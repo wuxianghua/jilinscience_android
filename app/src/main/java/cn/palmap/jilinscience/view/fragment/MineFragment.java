@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -18,6 +20,7 @@ import cn.palmap.jilinscience.base.BaseFragment;
 import cn.palmap.jilinscience.model.User;
 import cn.palmap.jilinscience.view.LoginActivity;
 import cn.palmap.jilinscience.view.MainActivity;
+import cn.palmap.jilinscience.view.UserInfoActivity;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -50,6 +53,19 @@ public class MineFragment extends BaseFragment {
         user = App.getInstance().getUser();
         if (user == null) {
             return;
+        } else {
+            initUserView();
+        }
+    }
+
+    private void initUserView() {
+        user = App.getInstance().getUser();
+        Glide.with(getActivity().getApplicationContext()).load(user.getHeadPath()).into(imageHead);
+        tvUserName.setText(user.getLoginName());
+        if (user.getSex() == 0) {
+            imageSex.setImageResource(R.mipmap.ic_my_boy);
+        } else {
+            imageSex.setImageResource(R.mipmap.ic_my_girl);
         }
     }
 
@@ -63,12 +79,17 @@ public class MineFragment extends BaseFragment {
 
     }
 
+    @OnClick(R.id.imageHead)
+    public void onHeadImageClick(){
+        startActivity(new Intent(getActivity(),UserInfoActivity.class));
+        return;
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == MainActivity.CODE_LOGIN && resultCode == RESULT_OK) {
-            //加载
-
+            initUserView();
         }
     }
 
