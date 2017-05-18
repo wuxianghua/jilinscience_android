@@ -15,7 +15,7 @@
             android:layout_centerInParent="true"
             android:layout_height="wrap_content">
 
-            <ImageView
+            <cn.palmap.jilinscience.view.ZQRoundOvalImageView
                 android:id="@+id/imageHead"
                 android:src="@mipmap/ic_my_head"
                 android:layout_width="72dp"
@@ -29,7 +29,8 @@
                 android:layout_alignRight="@+id/imageHead"
                 android:src="@mipmap/ic_my_boy"
                 android:layout_width="16dp"
-                android:layout_height="16dp"/>
+                android:layout_height="16dp"
+                android:visibility="gone"/>
 
         </RelativeLayout>
 

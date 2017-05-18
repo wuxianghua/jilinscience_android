@@ -1,5 +1,7 @@
 package cn.palmap.jilinscience.model;
 
+import java.io.Serializable;
+
 import lombok.Data;
 
 /**
@@ -7,8 +9,7 @@ import lombok.Data;
  */
 
 @Data
-public class User {
-
+public class User implements Serializable{
     private int id;
     private String loginName;
     private String userName;

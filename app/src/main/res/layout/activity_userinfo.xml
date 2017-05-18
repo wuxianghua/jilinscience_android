@@ -79,6 +79,7 @@
             android:text="@string/txt_sex"
             />
         <TextView
+            android:id="@+id/tv_user_sex"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="13sp"
@@ -91,11 +92,21 @@
             android:src="@mipmap/ic_my_arrow"
             android:layout_marginRight="15dp"/>
     </LinearLayout>
-    <LinearLayout style="@style/UserInfoStyle">
+
+    <LinearLayout style="@style/UserInfoStyle"
+        android:id="@+id/ll_tv_user_birthday">
         <TextView
             style="@style/UserInfoSonStyle"
             android:text="@string/txt_birthday"
             />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="13sp"
+            android:textColor="#94999c"
+            android:text="游客9527"
+            android:layout_marginRight="15dp"
+            android:id="@+id/tv_user_birthday" />
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

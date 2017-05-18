@@ -9,11 +9,11 @@ import retrofit2.http.POST;
 import retrofit2.http.Part;
 
 /**
- * Created by stone on 2017/5/12.
+ * Created by stone on 2017/5/15.
  */
 
-public interface UserNameService {
+public interface UserBirthdayService {
     @Multipart
-    @POST("/jlsci/user/updateUserName")
-    Call<ApiCode> uploadNickName(@Header("authentication-customer") String customer, @Part("userName") RequestBody userName);
+    @POST("/jlsci/user/updateBirthday")
+    Call<ApiCode> updateBirthday(@Header("authentication-customer") String customer, @Part("birthday") RequestBody userBirthday);
 }

@@ -2,6 +2,7 @@ package cn.palmap.jilinscience.view.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,10 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -17,9 +22,13 @@ import butterknife.Unbinder;
 import cn.palmap.jilinscience.App;
 import cn.palmap.jilinscience.R;
 import cn.palmap.jilinscience.base.BaseFragment;
+import cn.palmap.jilinscience.config.ServereConfig;
 import cn.palmap.jilinscience.model.User;
+import cn.palmap.jilinscience.view.ContactActivity;
+import cn.palmap.jilinscience.view.HelpActivity;
 import cn.palmap.jilinscience.view.LoginActivity;
 import cn.palmap.jilinscience.view.MainActivity;
+import cn.palmap.jilinscience.view.SettingActivity;
 import cn.palmap.jilinscience.view.UserInfoActivity;
 
 import static android.app.Activity.RESULT_OK;
@@ -47,25 +56,55 @@ public class MineFragment extends BaseFragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        user = App.getInstance().getUser();
+        if (user != null) {
+            initUserView();
+        }
+    }
+
+    @Override
     public void initView() {
         super.initView();
         unbinder = ButterKnife.bind(this, rootView);
-        user = App.getInstance().getUser();
+        user = unPersistUserInfo();
+        App.getInstance().setUser(user);
         if (user == null) {
+            imageSex.setVisibility(View.GONE);
             return;
         } else {
             initUserView();
         }
     }
 
+    private User unPersistUserInfo() {
+        ObjectInputStream in= null;
+        User mUser = null;
+        try {
+            in = new ObjectInputStream(new FileInputStream(getActivity().getExternalCacheDir().getPath()+"/user.txt"));
+            mUser=(User)in.readObject();
+            in.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            return mUser;
+        }
+
+    }
+
     private void initUserView() {
-        user = App.getInstance().getUser();
-        Glide.with(getActivity().getApplicationContext()).load(user.getHeadPath()).into(imageHead);
-        tvUserName.setText(user.getLoginName());
-        if (user.getSex() == 0) {
+        Glide.with(getActivity().getApplicationContext()).load(ServereConfig.HEAD_ROOT_HOST+user.getHeadPath()).into(imageHead);
+        tvUserName.setText(user.getUserName());
+        imageSex.setVisibility(View.VISIBLE);
+        if (user.getSex() == 1) {
             imageSex.setImageResource(R.mipmap.ic_my_boy);
         } else {
-            imageSex.setImageResource(R.mipmap.ic_my_girl);
+            if (user.getSex() == 2) {
+                imageSex.setImageResource(R.mipmap.ic_my_girl);
+            } else {
+                imageSex.setVisibility(View.GONE);
+            }
         }
     }
 
@@ -81,7 +120,27 @@ public class MineFragment extends BaseFragment {
 
     @OnClick(R.id.imageHead)
     public void onHeadImageClick(){
-        startActivity(new Intent(getActivity(),UserInfoActivity.class));
+        if (user != null) {
+            startActivity(new Intent(getActivity(),UserInfoActivity.class));
+            return;
+        }
+    }
+
+    @OnClick(R.id.tvContactus)
+    public void onContactItemClick(){
+        startActivity(new Intent(getActivity(),ContactActivity.class));
+        return;
+    }
+
+    @OnClick(R.id.tvHelp)
+    public void onHelpItemClick(){
+        startActivity(new Intent(getActivity(),HelpActivity.class));
+        return;
+    }
+
+    @OnClick(R.id.tvSetting)
+    public void onSettingItemClick(){
+        startActivity(new Intent(getActivity(),SettingActivity.class));
         return;
     }
 
@@ -89,6 +148,7 @@ public class MineFragment extends BaseFragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == MainActivity.CODE_LOGIN && resultCode == RESULT_OK) {
+            user = App.getInstance().getUser();
             initUserView();
         }
     }

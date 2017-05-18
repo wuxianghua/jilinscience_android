@@ -28,6 +28,7 @@
             android:layout_height="match_parent">
 
             <ImageView
+                android:id="@+id/iv_tab_home"
                 android:layout_marginTop="10dp"
                 android:layout_centerVertical="true"
                 android:src="@drawable/ic_tab_home"
@@ -35,6 +36,7 @@
                 android:layout_height="18dp"/>
 
             <TextView
+                android:id="@+id/tv_tab_home"
                 android:layout_marginTop="5dp"
                 android:textColor="@drawable/txt_tab"
                 android:textSize="10sp"
@@ -53,6 +55,7 @@
             android:layout_height="match_parent">
 
             <ImageView
+                android:id="@+id/iv_tab_mine"
                 android:layout_marginTop="10dp"
                 android:layout_centerVertical="true"
                 android:src="@drawable/ic_tab_my"
@@ -60,6 +63,7 @@
                 android:layout_height="18dp"/>
 
             <TextView
+                android:id="@+id/tv_tab_mine"
                 android:layout_marginTop="5dp"
                 android:textColor="@drawable/txt_tab"
                 android:textSize="10sp"

@@ -1,5 +1,6 @@
 package cn.palmap.jilinscience.view;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -8,10 +9,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import cn.palmap.jilinscience.App;
 import cn.palmap.jilinscience.R;
 import cn.palmap.jilinscience.api.UserNameService;
 import cn.palmap.jilinscience.factory.ServiceFactory;
+import cn.palmap.jilinscience.model.ApiCode;
 import cn.palmap.jilinscience.utils.SharedPreferenceUtils;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 import retrofit2.Callback;
 import retrofit2.Response;
 
@@ -25,10 +30,12 @@ public class NicknameActivity extends AppCompatActivity implements View.OnClickL
     private String mNickName;
     private String apiconde;
     private String phone;
+    private Intent data;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        App.getInstance().addActivity(this);
         setContentView(R.layout.activity_nickname);
         initView();
         initData();
@@ -42,6 +49,7 @@ public class NicknameActivity extends AppCompatActivity implements View.OnClickL
     private void initView() {
         mBtNickName = (Button) findViewById(R.id.nick_name_bt);
         mEtNickName = (EditText) findViewById(R.id.nick_name_et);
+
     }
 
     @Override
@@ -49,7 +57,7 @@ public class NicknameActivity extends AppCompatActivity implements View.OnClickL
         switch (v.getId()) {
             case R.id.nick_name_bt:
                 mNickName = mEtNickName.getText().toString().trim();
-                uploadNickName(mNickName);
+                uploadNickName();
                 break;
         }
     }
@@ -57,20 +65,26 @@ public class NicknameActivity extends AppCompatActivity implements View.OnClickL
     private void initData() {
         apiconde = SharedPreferenceUtils.getValue(NicknameActivity.this,"UserInfo","customId",null);
         phone = SharedPreferenceUtils.getValue(NicknameActivity.this,"UserInfo","phone",null);
+
+        data = new Intent();
     }
 
-    private void uploadNickName(String mNickName) {
+    private void uploadNickName() {
         final UserNameService userNameService = ServiceFactory.create(UserNameService.class);
-        retrofit2.Call<String> call = userNameService.uploadNickName(phone+";"+apiconde,mNickName);
-        call.enqueue(new Callback<String>() {
+        final RequestBody requestBody =
+                RequestBody.create(MediaType.parse("multipart/form-data"),mNickName);
+        retrofit2.Call<ApiCode> call = userNameService.uploadNickName(phone+";"+apiconde,requestBody);
+        call.enqueue(new Callback<ApiCode>() {
             @Override
-            public void onResponse(retrofit2.Call<String> call, Response<String> response) {
+            public void onResponse(retrofit2.Call<ApiCode> call, Response<ApiCode> response) {
+                setResult(RESULT_OK,data.putExtra("nickName",mNickName));
+                finish();
                 Log.v("Upload", response.message());
                 Log.v("Upload", "success");
             }
 
             @Override
-            public void onFailure(retrofit2.Call<String> call, Throwable t) {
+            public void onFailure(retrofit2.Call<ApiCode> call, Throwable t) {
                 Log.e("Upload", t.toString());
             }
         });

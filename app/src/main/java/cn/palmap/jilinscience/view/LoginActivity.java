@@ -2,6 +2,7 @@ package cn.palmap.jilinscience.view;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Environment;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
@@ -10,6 +11,11 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
@@ -24,6 +30,7 @@ import cn.palmap.jilinscience.di.module.MainModule;
 import cn.palmap.jilinscience.factory.ServiceFactory;
 import cn.palmap.jilinscience.model.ApiCode;
 import cn.palmap.jilinscience.model.User;
+import cn.palmap.jilinscience.utils.FileUtils;
 import cn.palmap.jilinscience.utils.SharedPreferenceUtils;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
@@ -126,6 +133,7 @@ public class LoginActivity extends BaseActivity {
                                 @Override
                                 public ObservableSource<ApiCode> apply(@NonNull User user) throws Exception {
                                     App.getInstance().setUser(user);
+                                    FileUtils.persistUserInfo(user,LoginActivity.this);
                                     final ApiCode apiCode1 = new ApiCode();
                                     apiCode1.setError(0);
                                     return Observable.create(new ObservableOnSubscribe<ApiCode>() {
@@ -167,6 +175,8 @@ public class LoginActivity extends BaseActivity {
                     }
                 });
     }
+
+
 
     @OnClick(R.id.tvSendCode)
     public void sendCodeClick() {

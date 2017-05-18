@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/appBackground">
+    <RelativeLayout
+        android:id="@+id/layoutBar"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="@android:color/white"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp">
+
+        <ImageView
+            android:id="@+id/imageBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:src="@mipmap/ic_nav_back"/>
+
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="设置"
+            android:textColor="#2F3336"
+            android:textSize="17sp"/>
+    </RelativeLayout>
+    <TextView
+        android:id="@+id/tv_setting_notification"
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:paddingLeft="15dp"
+        android:textSize="15sp"
+        android:textColor="@color/colorHeadImage"
+        android:background="@android:color/white"
+        android:gravity="center_vertical"
+        android:text="通知"/>
+    <TextView
+        android:id="@+id/tv_setting_resetpsw"
+        android:layout_marginTop="11dp"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:paddingLeft="15dp"
+        android:textSize="15sp"
+        android:textColor="@color/colorHeadImage"
+        android:background="@android:color/white"
+        android:gravity="center_vertical"
+        android:text="重设密码"/>
+    <TextView
+        android:id="@+id/tv_setting_exitapp"
+        android:layout_marginTop="1dp"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:paddingLeft="15dp"
+        android:textSize="15sp"
+        android:textColor="@color/colorHeadImage"
+        android:background="@android:color/white"
+        android:gravity="center_vertical"
+        android:text="退出"/>
+</LinearLayout>

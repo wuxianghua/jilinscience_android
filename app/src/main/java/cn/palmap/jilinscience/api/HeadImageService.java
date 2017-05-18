@@ -1,5 +1,6 @@
 package cn.palmap.jilinscience.api;
 
+import cn.palmap.jilinscience.model.ApiCode;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Header;
@@ -14,5 +15,6 @@ import retrofit2.http.Part;
 public interface HeadImageService {
     @Multipart
     @POST("/jlsci/user/updateHeadPath")
-    Call<Boolean> uploadImage(@Header("authentication-customer") String customer, @Part("file\"; filename=\"image.png\"") RequestBody imgs);
+    Call<ApiCode> updateImage(@Header("authentication-customer") String customer,
+                              @Part("headPath") RequestBody  path);
 }

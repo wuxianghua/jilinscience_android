@@ -19,25 +19,35 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.bumptech.glide.Glide;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 import cn.palmap.jilinscience.App;
 import cn.palmap.jilinscience.R;
 import cn.palmap.jilinscience.api.HeadImageService;
+import cn.palmap.jilinscience.api.UploadHeadService;
+import cn.palmap.jilinscience.api.UserBirthdayService;
 import cn.palmap.jilinscience.api.UserSexService;
+import cn.palmap.jilinscience.config.ServereConfig;
 import cn.palmap.jilinscience.factory.ServiceFactory;
+import cn.palmap.jilinscience.model.ApiCode;
 import cn.palmap.jilinscience.model.User;
+import cn.palmap.jilinscience.utils.FileUtils;
 import cn.palmap.jilinscience.utils.SharedPreferenceUtils;
 import cn.palmap.jilinscience.utils.UtilImags;
 import okhttp3.MediaType;
@@ -45,11 +55,12 @@ import okhttp3.RequestBody;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+
 /**
  * Created by stone on 2017/5/11.
  */
 
-public class UserInfoActivity extends AppCompatActivity implements View.OnClickListener{
+public class UserInfoActivity extends AppCompatActivity implements View.OnClickListener {
     ZQRoundOvalImageView zqRoundOvalImageView;
     PopupWindow pop;
     LinearLayout ll_popup;
@@ -58,39 +69,76 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
     String filename = null;
     private LinearLayout mNickName;
     private LinearLayout mUserSex;
+    private LinearLayout mUserBirthday;
     private TextView mTvNickName;
+    private TextView mTvUserSex;
     private User mUser;
+    private String birthday;
+    private SimpleDateFormat formatter;
 
     private final int SEXID_MAN = 1;
     private final int SEXID_FEMAL = 2;
     private final int SEXID_SECRET = 0;
+    private TextView tvTime;
+    private int currentMonth;
+    private int currentYear;
+    private int currentDay;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_userinfo);
+        App.getInstance().addActivity(this);
         initView();
+        initData();
     }
 
     private void initView() {
         mTvNickName = (TextView) findViewById(R.id.tv_nickname);
         mUserSex = (LinearLayout) findViewById(R.id.user_sex_ll);
+        mTvUserSex = (TextView) findViewById(R.id.tv_user_sex);
         zqRoundOvalImageView = (ZQRoundOvalImageView) findViewById(R.id.iv_head_image);
         mNickName = (LinearLayout) findViewById(R.id.nick_name_ll);
+        mUserBirthday = (LinearLayout) findViewById(R.id.ll_tv_user_birthday);
+        mUserBirthday.setOnClickListener(this);
         mNickName.setOnClickListener(this);
         mUserSex.setOnClickListener(this);
+        tvTime = (TextView) findViewById(R.id.tv_user_birthday);
         zqRoundOvalImageView.setOnClickListener(this);
         findViewById(R.id.userinfo_imageBack).setOnClickListener(this);
-        initData();
     }
+
+
 
     private void initData() {
         mUser = App.getInstance().getUser();
+        formatter = new SimpleDateFormat("yyyy-MM-dd");
+        birthday = formatter.format(mUser.getBirthday());
         if (mUser != null) {
+            getUserSex(mUser.getSex());
             mTvNickName.setText(mUser.getUserName());
+            mTvUserSex.setText(getUserSex(mUser.getSex()));
+            tvTime.setText(birthday);
+            Glide.with(UserInfoActivity.this).load(ServereConfig.HEAD_ROOT_HOST+mUser.getHeadPath()).into(zqRoundOvalImageView);
         }
-        apiconde = SharedPreferenceUtils.getValue(UserInfoActivity.this,"UserInfo","customId",null);
-        phone = SharedPreferenceUtils.getValue(UserInfoActivity.this,"UserInfo","phone",null);
+        apiconde = SharedPreferenceUtils.getValue(UserInfoActivity.this, "UserInfo", "customId", null);
+        phone = SharedPreferenceUtils.getValue(UserInfoActivity.this, "UserInfo", "phone", null);
+        Calendar c = Calendar.getInstance();
+        currentYear = c.get(Calendar.YEAR);
+        currentMonth = c.get(Calendar.MONTH)+1;
+        currentDay = c.get(Calendar.DATE);
+    }
+
+    private String getUserSex(int sex) {
+        switch (sex) {
+            case 0:
+                return "秘密";
+            case 1:
+                return "男";
+            case 2:
+                return "女";
+        }
+        return "秘密";
     }
 
     @Override
@@ -106,7 +154,7 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
                 break;
 
             case R.id.nick_name_ll:
-                startActivity(new Intent(UserInfoActivity.this,NicknameActivity.class));
+                startActivityForResult(new Intent(UserInfoActivity.this, NicknameActivity.class), 3);
                 break;
             case R.id.user_sex_ll:
                 showSexPopupWindow();
@@ -114,6 +162,57 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
                         UserInfoActivity.this, R.anim.activity_translate_in));
                 pop.showAtLocation(v, Gravity.BOTTOM, 0, 0);
                 break;
+            case R.id.ll_tv_user_birthday:
+                showTimerPicker();
+                break;
+        }
+    }
+
+    private void showTimerPicker() {
+        new DoubleDatePickerDialog(UserInfoActivity.this, 0, new DoubleDatePickerDialog.OnDateSetListener() {
+
+            @Override
+            public void onDateSet(DatePicker startDatePicker, int startYear, int startMonthOfYear, int startDayOfMonth) {
+                currentMonth = startMonthOfYear + 1;
+                currentDay = startDayOfMonth;
+                currentYear = startYear;
+                String textString = currentYear+"-"+currentMonth+"-"+currentDay;
+                tvTime.setText(textString);
+                updateUserBirthday(textString);
+            }
+        }, currentYear, currentMonth-1, currentDay, true).show();
+    }
+
+    private void updateUserBirthday(final String birthday) {
+        final UserBirthdayService userSexService = ServiceFactory.create(UserBirthdayService.class);
+        final RequestBody requestBody =
+                RequestBody.create(MediaType.parse("multipart/form-data"), birthday);
+        retrofit2.Call<ApiCode> call = userSexService.updateBirthday(phone + ";" + apiconde, requestBody);
+        call.enqueue(new Callback<ApiCode>() {
+            @Override
+            public void onResponse(retrofit2.Call<ApiCode> call, Response<ApiCode> response) {
+                mUser.setBirthday(parseStringTime(birthday));
+                FileUtils.persistUserInfo(mUser,UserInfoActivity.this);
+                Log.v("Upload", response.message());
+                Log.v("Upload", "success");
+            }
+
+            @Override
+            public void onFailure(retrofit2.Call<ApiCode> call, Throwable t) {
+                Log.e("Upload", t.toString());
+            }
+        });
+    }
+
+    private long parseStringTime(String birthday) {
+        long time = 0;
+        try {
+            Date date = formatter.parse(birthday);
+            time = date.getTime();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        } finally {
+            return time;
         }
     }
 
@@ -198,6 +297,7 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
             public void onClick(View v) {
                 uploadUserSex(SEXID_MAN);
                 pop.dismiss();
+                mTvUserSex.setText(getString(R.string.txt_man));
                 ll_popup.clearAnimation();
             }
         });
@@ -205,14 +305,16 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
             public void onClick(View v) {
                 uploadUserSex(SEXID_FEMAL);
                 pop.dismiss();
+                mTvUserSex.setText(getString(R.string.txt_femal));
                 ll_popup.clearAnimation();
             }
         });
 
-        bt2.setOnClickListener(new View.OnClickListener() {
+        bt3.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 uploadUserSex(SEXID_SECRET);
                 pop.dismiss();
+                mTvUserSex.setText(getString(R.string.txt_secret));
                 ll_popup.clearAnimation();
             }
         });
@@ -225,18 +327,20 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
         });
     }
 
-    private void uploadUserSex(int sexId) {
+    private void uploadUserSex(final int sexId) {
         final UserSexService userSexService = ServiceFactory.create(UserSexService.class);
-        retrofit2.Call<String> call = userSexService.uploadSex(phone+";"+apiconde,sexId);
-        call.enqueue(new Callback<String>() {
+        retrofit2.Call<ApiCode> call = userSexService.uploadSex(phone + ";" + apiconde, sexId);
+        call.enqueue(new Callback<ApiCode>() {
             @Override
-            public void onResponse(retrofit2.Call<String> call, Response<String> response) {
+            public void onResponse(retrofit2.Call<ApiCode> call, Response<ApiCode> response) {
+                mUser.setSex(sexId);
+                FileUtils.persistUserInfo(mUser,UserInfoActivity.this);
                 Log.v("Upload", response.message());
                 Log.v("Upload", "success");
             }
 
             @Override
-            public void onFailure(retrofit2.Call<String> call, Throwable t) {
+            public void onFailure(retrofit2.Call<ApiCode> call, Throwable t) {
                 Log.e("Upload", t.toString());
             }
         });
@@ -275,9 +379,8 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
                 }
             }
             zqRoundOvalImageView.setImageBitmap(bmp);
-            staffFileupload(new File(filename));
-        }
-        if (requestCode == 2 && resultCode == Activity.RESULT_OK
+            staffFileupload(new File(filename),name);
+        } else if (requestCode == 2 && resultCode == Activity.RESULT_OK
                 && null != data) {
             try {
                 Uri selectedImage = data.getData();
@@ -293,10 +396,15 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
                 // 获取图片并显示
                 zqRoundOvalImageView.setImageBitmap(bmp);
                 saveBitmapFile(UtilImags.compressScale(bmp), UtilImags.SHOWFILEURL(UserInfoActivity.this) + "/stscname.jpg");
-                staffFileupload(new File(UtilImags.SHOWFILEURL(UserInfoActivity.this) + "/stscname.jpg"));
+                staffFileupload(new File(UtilImags.SHOWFILEURL(UserInfoActivity.this) + "/stscname.jpg"),"/stscname.jpg");
             } catch (Exception e) {
                 showToastShort("上传失败");
             }
+        } else if (requestCode == 3 && resultCode == Activity.RESULT_OK
+                && null != data) {
+            mTvNickName.setText(data.getStringExtra("nickName"));
+            mUser.setUserName(data.getStringExtra("nickName"));
+            FileUtils.persistUserInfo(mUser,UserInfoActivity.this);
         }
     }
 
@@ -312,21 +420,51 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
         }
     }
 
-    public void staffFileupload(File file) {
-        final HeadImageService headImageService = ServiceFactory.create(HeadImageService.class);
-        String imageName = "stscname.jpg";
-        RequestBody requestBody =
+    public void staffFileupload(File file,String imageName) {
+        final UploadHeadService uploadHeadService = ServiceFactory.create(UploadHeadService.class);
+        final RequestBody requestBody =
                 RequestBody.create(MediaType.parse("multipart/form-data"), file);
-        retrofit2.Call<Boolean> call = headImageService.uploadImage(phone+";"+apiconde, requestBody);
-        call.enqueue(new Callback<Boolean>() {
+        retrofit2.Call<ApiCode> call = uploadHeadService.uploadImage(phone + ";" + apiconde, requestBody);
+        call.enqueue(new Callback<ApiCode>() {
             @Override
-            public void onResponse(retrofit2.Call<Boolean> call, Response<Boolean> response) {
+            public void onResponse(retrofit2.Call<ApiCode> call, Response<ApiCode> response) {
+                Log.v("Upload", response.message());
+                Log.v("Upload", "success");
+                if (response.isSuccessful()) {
+                    String str = response.body().getMsg();
+                    staffFileupDate(str);
+                    mUser.setHeadPath(str);
+                    FileUtils.persistUserInfo(mUser,UserInfoActivity.this);
+                }
+            }
+
+            @Override
+            public void onFailure(retrofit2.Call<ApiCode> call, Throwable t) {
+                Log.e("Upload", t.toString());
+            }
+        });
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+    }
+
+    public void staffFileupDate(String str) {
+        final HeadImageService headImageService = ServiceFactory.create(HeadImageService.class);
+        final RequestBody requestBody =
+                RequestBody.create(MediaType.parse("multipart/form-data"), str);
+        retrofit2.Call<ApiCode> call = headImageService.updateImage(phone + ";" + apiconde, requestBody);
+        call.enqueue(new Callback<ApiCode>() {
+            @Override
+            public void onResponse(retrofit2.Call<ApiCode> call, Response<ApiCode> response) {
                 Log.v("Upload", response.message());
                 Log.v("Upload", "success");
             }
 
             @Override
-            public void onFailure(retrofit2.Call<Boolean> call, Throwable t) {
+            public void onFailure(retrofit2.Call<ApiCode> call, Throwable t) {
                 Log.e("Upload", t.toString());
             }
         });

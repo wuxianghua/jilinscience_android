@@ -6,5 +6,7 @@
     <string name="txt_sex">性别</string>
     <string name="txt_man">男</string>
     <string name="txt_femal">女</string>
+    <string name="txt_secret">秘密</string>
     <string name="txt_birthday">出生日期</string>
+    <string name="hint_verify">我们已发送验证码到您的手机</string>
 </resources>

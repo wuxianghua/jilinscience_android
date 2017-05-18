@@ -6,6 +6,8 @@
     <uses-permission android:name="android.permission.INTERNET"/>
     <!-- 允许应用写（非读）用户的外部存储器 -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <!-- 允许应用读（非读）用户的外部存储器 -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <!-- 允许获取位置信息 -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
@@ -41,12 +43,35 @@
 
         <activity android:name=".view.LoginActivity">
         </activity>
+        <activity android:name=".view.ContactActivity">
+        </activity>
+        <activity android:name=".view.HelpActivity">
+        </activity>
         <activity android:name=".view.UserInfoActivity">
         </activity>
         <activity android:name=".view.NicknameActivity">
         </activity>
         <activity android:name=".view.RegisterActivity">
         </activity>
+        <activity android:name=".view.SettingActivity">
+        </activity>
+        <activity android:name=".view.NotificationActivity">
+        </activity>
+        <activity android:name=".view.ResetPswActivity">
+        </activity>
+        <receiver
+            android:name=".receiver.JPushBroadCastReceiver"
+            android:enabled="true">
+            <intent-filter>
+                <action android:name="cn.jpush.android.intent.REGISTRATION"/>
+                <action android:name="cn.jpush.android.intent.MESSAGE_RECEIVED"/>
+                <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED"/>
+                <action android:name="cn.jpush.android.intent.NOTIFICATION_OPENED"/>
+                <action android:name="cn.jpush.android.intent.NOTIFICATION_CLICK_ACTION"/>
+                <action android:name="cn.jpush.android.intent.CONNECTION"/>
+                <category android:name="cn.palmap.jilinscience"/>
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

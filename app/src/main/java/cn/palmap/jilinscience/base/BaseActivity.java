@@ -1,5 +1,9 @@
 package cn.palmap.jilinscience.base;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -7,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
+import cn.palmap.jilinscience.App;
 import cn.palmap.jilinscience.delegate.ProgressDialogDelegate;
 import cn.palmap.jilinscience.delegate.ToastDelegate;
 import cn.palmap.jilinscience.di.component.ApplicationComponent;
@@ -25,11 +30,15 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         afterOnCreate();
         super.onCreate(savedInstanceState);
+        App.getInstance().addActivity(this);
         setContentView(layoutId());
         ButterKnife.bind(this);
         inject();
         onInjected();
     }
+
+
+
 
     protected void afterOnCreate(){
 

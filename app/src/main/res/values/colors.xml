@@ -2,7 +2,7 @@
 <resources>
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorAccent">#078BD7</color>
 
     <color name="tab_normal">#94999C</color>
     <color name="tab_selected">#078BD7</color>
@@ -10,5 +10,4 @@
     <color name="appBackground">#F8F8F8</color>
     <color name="background_uphead_image">#4b000000</color>
     <color name="colorHeadImage">#565c60</color>
-
 </resources>

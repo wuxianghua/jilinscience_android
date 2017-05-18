@@ -6,6 +6,7 @@ import cn.palmap.jilinscience.di.module.MainModule;
 import cn.palmap.jilinscience.view.LoginActivity;
 import cn.palmap.jilinscience.view.MainActivity;
 import cn.palmap.jilinscience.view.RegisterActivity;
+import cn.palmap.jilinscience.view.ResetPswActivity;
 import dagger.Component;
 
 /**
@@ -20,4 +21,6 @@ public interface ViewComponent extends ActivityComponent {
     void inject(LoginActivity activity);
 
     void inject(RegisterActivity registerActivity);
+
+    void inject(ResetPswActivity registerActivity);
 }

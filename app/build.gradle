@@ -6,6 +6,18 @@ android {
     buildToolsVersion "25.0.2"
     defaultConfig {
         applicationId "cn.palmap.jilinscience"
+
+        ndk {
+            //选择要添加的对应cpu类型的.so库。
+            abiFilters 'armeabi','x86'
+
+        }
+
+        manifestPlaceholders = [
+                JPUSH_PKGNAME : applicationId,
+                JPUSH_APPKEY : "384437479a9db7e6739afa03",
+                JPUSH_CHANNEL : "yingyongbao"
+        ]
         minSdkVersion 16
         targetSdkVersion 21
         versionCode 1
@@ -53,4 +65,6 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok:1.12.6'
     annotationProcessor 'in.workarounds.bundler:bundler-compiler:0.1.1'
     provided 'org.projectlombok:lombok:1.16.10'
+    compile 'cn.jiguang.sdk:jpush:3.0.5'  // 此处以JPush 3.0.5 版本为例。
+    compile 'cn.jiguang.sdk:jcore:1.1.2'  // 此处以JCore 1.1.2 版本为例。
 }
