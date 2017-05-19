@@ -1,8 +1,8 @@
 package cn.palmap.jilinscience.view;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
-import android.os.Environment;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
@@ -10,12 +10,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
@@ -30,6 +24,7 @@ import cn.palmap.jilinscience.di.module.MainModule;
 import cn.palmap.jilinscience.factory.ServiceFactory;
 import cn.palmap.jilinscience.model.ApiCode;
 import cn.palmap.jilinscience.model.User;
+import cn.palmap.jilinscience.utils.DialogUtils;
 import cn.palmap.jilinscience.utils.FileUtils;
 import cn.palmap.jilinscience.utils.SharedPreferenceUtils;
 import io.reactivex.Observable;
@@ -97,12 +92,12 @@ public class LoginActivity extends BaseActivity {
             return;
         }
         if (!checkMobile(editUserName.getText().toString())) {
-            showMsg("请输入正确手机号");
+            DialogUtils.showOtherErrorDialog("手机号输入错误",LoginActivity.this);
             return;
         }
         if (isUsePwdLogin) {
             if (TextUtils.isEmpty(editUserPwd.getText().toString())) {
-                showMsg("请输入密码");
+                DialogUtils.showPswErrorDialog(LoginActivity.this);
                 return;
             }
         }else{
@@ -176,14 +171,13 @@ public class LoginActivity extends BaseActivity {
                 });
     }
 
-
-
     @OnClick(R.id.tvSendCode)
     public void sendCodeClick() {
         if (tvSendCode.getTag() == null) {
             //吊起发送
             if (!checkMobile(editUserName.getText().toString())) {
                 showMsg("请输入正确的手机号");
+                DialogUtils.showOtherErrorDialog("请输入正确的手机号",LoginActivity.this);
                 return;
             }
             callRequestCode(editUserName.getText().toString());

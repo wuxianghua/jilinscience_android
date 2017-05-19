@@ -15,6 +15,13 @@ public class SharedPreferenceUtils {
         sp.commit();
     }
 
+    public static void putValue(Context context, String name, String key,
+                                boolean value) {
+        SharedPreferences.Editor sp = getEditor(context, name);
+        sp.putBoolean(key, value);
+        sp.commit();
+    }
+
     /**
      * 从SharedPreferences中读取int类型的数据
      *
@@ -28,6 +35,13 @@ public class SharedPreferenceUtils {
                                int defValue) {
         SharedPreferences sp = getSharedPreferences(context, name);
         int value = sp.getInt(key, defValue);
+        return value;
+    }
+
+    public static boolean getValue(Context context, String name, String key,
+                               boolean defValue) {
+        SharedPreferences sp = getSharedPreferences(context, name);
+        boolean value = sp.getBoolean(key, defValue);
         return value;
     }
 

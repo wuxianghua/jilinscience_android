@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
@@ -34,6 +35,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
     private LinearLayout ll_popup;
     private User mUser;
     private Intent mExitIntent;
+    private ImageView mImageBack;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,12 +50,14 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         mNotification.setOnClickListener(this);
         mExitApplication.setOnClickListener(this);
         mResetPassword.setOnClickListener(this);
+        mImageBack.setOnClickListener(this);
     }
 
     private void initView() {
         mNotification = (TextView) findViewById(R.id.tv_setting_notification);
         mResetPassword = (TextView) findViewById(R.id.tv_setting_resetpsw);
         mExitApplication = (TextView) findViewById(R.id.tv_setting_exitapp);
+        mImageBack = (ImageView) findViewById(R.id.imageBack);
     }
 
     @Override
@@ -66,12 +70,15 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                 pop.showAtLocation(v, Gravity.BOTTOM, 0, 0);
                 break;
             case R.id.tv_setting_notification:
-                if (mUser != null) {
-
-                }
+                startActivity(new Intent(SettingActivity.this,NotificationActivity.class));
                 break;
             case R.id.tv_setting_resetpsw:
-                startActivity(new Intent(SettingActivity.this,ResetPswActivity.class));
+                if (mUser != null) {
+                    startActivity(new Intent(SettingActivity.this,ResetPswActivity.class));
+                }
+                break;
+            case R.id.imageBack:
+                finish();
                 break;
         }
     }

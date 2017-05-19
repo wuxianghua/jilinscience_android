@@ -19,6 +19,7 @@ import cn.palmap.jilinscience.di.component.DaggerViewComponent;
 import cn.palmap.jilinscience.di.module.MainModule;
 import cn.palmap.jilinscience.factory.ServiceFactory;
 import cn.palmap.jilinscience.model.ApiCode;
+import cn.palmap.jilinscience.utils.DialogUtils;
 import cn.palmap.jilinscience.utils.StringUtils;
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
@@ -70,7 +71,7 @@ public class RegisterActivity extends BaseActivity {
         if (tvSendCode.getTag() == null) {
             //吊起发送
             if (!checkMobile(editUserName.getText().toString())) {
-                showMsg("请输入正确的手机号");
+                DialogUtils.showOtherErrorDialog("请输入正确的手机号",RegisterActivity.this);
                 return;
             }
             callRequestCode(editUserName.getText().toString());
@@ -109,19 +110,19 @@ public class RegisterActivity extends BaseActivity {
     @OnClick(R.id.btnRegister)
     public void registerClick() {
         if (TextUtils.isEmpty(editUserName.getText().toString())) {
-            showMsg("请输入手机号");
+            DialogUtils.showOtherErrorDialog("请输入正确的手机号",RegisterActivity.this);
             return;
         }
         if (!checkMobile(editUserName.getText().toString())) {
-            showMsg("请输入正确手机号");
-            return;
-        }
-        if (TextUtils.isEmpty(editUserPwd.getText().toString())) {
-            showMsg("请输入密码");
+            DialogUtils.showOtherErrorDialog("请输入正确的手机号",RegisterActivity.this);
             return;
         }
         if (TextUtils.isEmpty(editUserCode.getText().toString())) {
-            showMsg("请输入验证码");
+            DialogUtils.showOtherErrorDialog("验证码为空",RegisterActivity.this);
+            return;
+        }
+        if (TextUtils.isEmpty(editUserPwd.getText().toString())) {
+            DialogUtils.showOtherErrorDialog("你输入的新密码为空",RegisterActivity.this);
             return;
         }
         ServiceFactory.create(UserService.class)

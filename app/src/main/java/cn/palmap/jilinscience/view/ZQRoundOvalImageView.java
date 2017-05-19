@@ -76,8 +76,8 @@ public class ZQRoundOvalImageView extends ImageView {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         // 如果是绘制圆形，则强制宽高大小一致
         if (mType == TYPE_CIRCLE) {
-            mWidth = Math.min(getMeasuredWidth(), getMeasuredHeight());
-            mRadius = mWidth / 2;
+            mWidth = getMeasuredWidth();
+            mRadius = getMeasuredWidth() / 2;
             setMeasuredDimension(mWidth, mWidth);
         }
 

@@ -24,12 +24,14 @@ import cn.palmap.jilinscience.R;
 import cn.palmap.jilinscience.base.BaseFragment;
 import cn.palmap.jilinscience.config.ServereConfig;
 import cn.palmap.jilinscience.model.User;
+import cn.palmap.jilinscience.utils.NetUtils;
 import cn.palmap.jilinscience.view.ContactActivity;
 import cn.palmap.jilinscience.view.HelpActivity;
 import cn.palmap.jilinscience.view.LoginActivity;
 import cn.palmap.jilinscience.view.MainActivity;
 import cn.palmap.jilinscience.view.SettingActivity;
 import cn.palmap.jilinscience.view.UserInfoActivity;
+import cn.palmap.jilinscience.view.ZQRoundOvalImageView;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -39,7 +41,7 @@ import static android.app.Activity.RESULT_OK;
 
 public class MineFragment extends BaseFragment {
 
-    @BindView(R.id.imageHead) ImageView imageHead;
+    @BindView(R.id.imageHead) ZQRoundOvalImageView imageHead;
     @BindView(R.id.imageSex) ImageView imageSex;
     @BindView(R.id.tvUserName) TextView tvUserName;
     @BindView(R.id.tvHelp) TextView tvHelp;
@@ -68,8 +70,11 @@ public class MineFragment extends BaseFragment {
     public void initView() {
         super.initView();
         unbinder = ButterKnife.bind(this, rootView);
-        user = unPersistUserInfo();
-        App.getInstance().setUser(user);
+        if (NetUtils.isNetworkAvailable(getActivity())){
+            user = unPersistUserInfo();
+            App.getInstance().setUser(user);
+        }
+
         if (user == null) {
             imageSex.setVisibility(View.GONE);
             return;
@@ -94,7 +99,7 @@ public class MineFragment extends BaseFragment {
     }
 
     private void initUserView() {
-        Glide.with(getActivity().getApplicationContext()).load(ServereConfig.HEAD_ROOT_HOST+user.getHeadPath()).into(imageHead);
+        Glide.with(getActivity()).load(ServereConfig.HEAD_ROOT_HOST+user.getHeadPath()).into(imageHead);
         tvUserName.setText(user.getUserName());
         imageSex.setVisibility(View.VISIBLE);
         if (user.getSex() == 1) {

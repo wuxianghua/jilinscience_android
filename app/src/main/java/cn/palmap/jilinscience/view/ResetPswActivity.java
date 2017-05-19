@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.io.File;
@@ -24,6 +25,7 @@ import cn.palmap.jilinscience.delegate.ToastDelegate;
 import cn.palmap.jilinscience.factory.ServiceFactory;
 import cn.palmap.jilinscience.model.ApiCode;
 import cn.palmap.jilinscience.model.User;
+import cn.palmap.jilinscience.utils.DialogUtils;
 import cn.palmap.jilinscience.utils.SharedPreferenceUtils;
 import dagger.Lazy;
 import io.reactivex.Observable;
@@ -63,6 +65,7 @@ public class ResetPswActivity extends AppCompatActivity implements View.OnClickL
     private String mNewPassword;
     private StringBuffer secretePhone;
     private Intent mExitIntent;
+    private ImageView mImageBack;
     @Inject
     protected Lazy<ToastDelegate> toastDelegateLazy;
     @Inject protected Lazy<ProgressDialogDelegate> progressDialogDelegateLazy;
@@ -80,6 +83,7 @@ public class ResetPswActivity extends AppCompatActivity implements View.OnClickL
     private void initEvent() {
         tvGetVerifyCode.setOnClickListener(this);
         tvConfirm.setOnClickListener(this);
+        mImageBack.setOnClickListener(this);
     }
 
     private void initView() {
@@ -89,6 +93,7 @@ public class ResetPswActivity extends AppCompatActivity implements View.OnClickL
         etNewPassword = (EditText) findViewById(R.id.editUserPwd);
         etVerifyCode = (EditText) findViewById(R.id.editVerifyCode);
         tvConfirm = (TextView) findViewById(R.id.btn_confirm);
+        mImageBack = (ImageView) findViewById(R.id.imageBack);
         tvGetVerifyCode.setSelected(true);
     }
 
@@ -99,7 +104,7 @@ public class ResetPswActivity extends AppCompatActivity implements View.OnClickL
         if (mUser != null) {
             mPhoneNumber = mUser.getLoginName();
         }
-        secretePhone = new StringBuffer("+86 ").append(mPhoneNumber).replace(8,21,"****");
+        secretePhone = new StringBuffer("+86 ").append(mPhoneNumber).replace(7,11,"****");
     }
 
     public void sendCodeClick() {
@@ -151,16 +156,6 @@ public class ResetPswActivity extends AppCompatActivity implements View.OnClickL
         }
     }
 
-    public void showMsg(String msg) {
-        if (checkObj(progressDialogDelegateLazy)) {
-            toastDelegateLazy.get().showMsg(msg);
-        }
-    }
-
-    private boolean checkObj(Lazy lazy) {
-        return !(lazy == null || lazy.get() == null);
-    }
-
     private void callRequestCode(String mobile) {
         ServiceFactory.create(UserService.class)
                 .requestCode(mobile)
@@ -192,18 +187,21 @@ public class ResetPswActivity extends AppCompatActivity implements View.OnClickL
             case R.id.btn_confirm:
                 updatePassword();
                 break;
+            case R.id.imageBack:
+                finish();
+                break;
         }
     }
 
     private void updatePassword() {
         mNewPassword = etNewPassword.getText().toString().trim();
-        if ("".equals(mNewPassword)) {
-            showMsg("请输入新的密码");
-            return;
-        }
         mVerifyCode = etVerifyCode.getText().toString().trim();
         if("".equals(mVerifyCode)) {
-            showMsg("请输入验证码");
+            DialogUtils.showOtherErrorDialog("验证码为空!",ResetPswActivity.this);
+            return;
+        }
+        if ("".equals(mNewPassword)) {
+            DialogUtils.showOtherErrorDialog("请输入您的新密码",ResetPswActivity.this);
             return;
         }
         final ResetPswService resetPswService = ServiceFactory.create(ResetPswService.class);

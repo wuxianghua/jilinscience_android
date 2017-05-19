@@ -70,6 +70,10 @@ public class PWebView extends FrameLayout implements BeaconConsumer, RangeNotifi
         init();
     }
 
+    public String getUrl() {
+        return webView.getOriginalUrl();
+    }
+
     public PWebView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         init();

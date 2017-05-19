@@ -15,7 +15,7 @@ android {
 
         manifestPlaceholders = [
                 JPUSH_PKGNAME : applicationId,
-                JPUSH_APPKEY : "384437479a9db7e6739afa03",
+                JPUSH_APPKEY : "acc1116b7da83628ddfb6014",
                 JPUSH_CHANNEL : "yingyongbao"
         ]
         minSdkVersion 16

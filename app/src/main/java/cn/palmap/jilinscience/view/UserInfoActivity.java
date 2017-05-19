@@ -20,6 +20,7 @@ import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
@@ -75,6 +76,7 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
     private User mUser;
     private String birthday;
     private SimpleDateFormat formatter;
+    private ImageView mImageBack;
 
     private final int SEXID_MAN = 1;
     private final int SEXID_FEMAL = 2;
@@ -100,9 +102,11 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
         zqRoundOvalImageView = (ZQRoundOvalImageView) findViewById(R.id.iv_head_image);
         mNickName = (LinearLayout) findViewById(R.id.nick_name_ll);
         mUserBirthday = (LinearLayout) findViewById(R.id.ll_tv_user_birthday);
+        mImageBack = (ImageView) findViewById(R.id.userinfo_imageBack);
         mUserBirthday.setOnClickListener(this);
         mNickName.setOnClickListener(this);
         mUserSex.setOnClickListener(this);
+        mImageBack.setOnClickListener(this);
         tvTime = (TextView) findViewById(R.id.tv_user_birthday);
         zqRoundOvalImageView.setOnClickListener(this);
         findViewById(R.id.userinfo_imageBack).setOnClickListener(this);
@@ -150,9 +154,6 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
                         UserInfoActivity.this, R.anim.activity_translate_in));
                 pop.showAtLocation(v, Gravity.BOTTOM, 0, 0);
                 break;
-            case R.id.userinfo_imageBack:
-                break;
-
             case R.id.nick_name_ll:
                 startActivityForResult(new Intent(UserInfoActivity.this, NicknameActivity.class), 3);
                 break;
@@ -164,6 +165,9 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
                 break;
             case R.id.ll_tv_user_birthday:
                 showTimerPicker();
+                break;
+            case R.id.userinfo_imageBack:
+                finish();
                 break;
         }
     }
@@ -379,7 +383,7 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
                 }
             }
             zqRoundOvalImageView.setImageBitmap(bmp);
-            staffFileupload(new File(filename),name);
+            staffFileupload(new File(filename));
         } else if (requestCode == 2 && resultCode == Activity.RESULT_OK
                 && null != data) {
             try {
@@ -396,7 +400,7 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
                 // 获取图片并显示
                 zqRoundOvalImageView.setImageBitmap(bmp);
                 saveBitmapFile(UtilImags.compressScale(bmp), UtilImags.SHOWFILEURL(UserInfoActivity.this) + "/stscname.jpg");
-                staffFileupload(new File(UtilImags.SHOWFILEURL(UserInfoActivity.this) + "/stscname.jpg"),"/stscname.jpg");
+                staffFileupload(new File(UtilImags.SHOWFILEURL(UserInfoActivity.this)));
             } catch (Exception e) {
                 showToastShort("上传失败");
             }
@@ -420,7 +424,7 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
         }
     }
 
-    public void staffFileupload(File file,String imageName) {
+    public void staffFileupload(File file) {
         final UploadHeadService uploadHeadService = ServiceFactory.create(UploadHeadService.class);
         final RequestBody requestBody =
                 RequestBody.create(MediaType.parse("multipart/form-data"), file);
@@ -448,7 +452,7 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-
+        finish();
     }
 
     public void staffFileupDate(String str) {

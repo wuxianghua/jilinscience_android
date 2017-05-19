@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 import cn.palmap.jilinscience.App;
 import cn.palmap.jilinscience.R;
@@ -31,6 +32,7 @@ public class NicknameActivity extends AppCompatActivity implements View.OnClickL
     private String apiconde;
     private String phone;
     private Intent data;
+    private ImageView mImageBack;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -44,12 +46,13 @@ public class NicknameActivity extends AppCompatActivity implements View.OnClickL
 
     private void initEvent() {
         mBtNickName.setOnClickListener(this);
+        mImageBack.setOnClickListener(this);
     }
 
     private void initView() {
         mBtNickName = (Button) findViewById(R.id.nick_name_bt);
         mEtNickName = (EditText) findViewById(R.id.nick_name_et);
-
+        mImageBack = (ImageView) findViewById(R.id.imageBack);
     }
 
     @Override
@@ -58,6 +61,9 @@ public class NicknameActivity extends AppCompatActivity implements View.OnClickL
             case R.id.nick_name_bt:
                 mNickName = mEtNickName.getText().toString().trim();
                 uploadNickName();
+                break;
+            case R.id.imageBack:
+                finish();
                 break;
         }
     }

@@ -1,17 +1,21 @@
 package cn.palmap.jilinscience.view;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.json.JSONObject;
+
 import javax.inject.Inject;
 import javax.inject.Named;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import cn.jpush.android.api.JPushInterface;
 import cn.palmap.jilinscience.App;
 import cn.palmap.jilinscience.R;
 import cn.palmap.jilinscience.base.BaseActivity;
@@ -98,6 +102,9 @@ public class MainActivity extends BaseActivity implements FragmentTabController.
             ivTabHome.setSelected(true);
             tvTabHome.setSelected(true);
         } else {
+            if (((HomePageFragment) fragmentTabController.getCurrentFragment()).isHomePage()) {
+                return;
+            }
             App.getInstance().onTerminate();
         }
     }
@@ -110,7 +117,8 @@ public class MainActivity extends BaseActivity implements FragmentTabController.
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if ((keyCode == KeyEvent.KEYCODE_BACK)
                 && 0 == fragmentTabController.getCurrentTabPosition()
-                && ((HomePageFragment) fragmentTabController.getCurrentFragment()).canGoBack()) {
+                && ((HomePageFragment) fragmentTabController.getCurrentFragment()).canGoBack()
+                && ((HomePageFragment) fragmentTabController.getCurrentFragment()).isHomePage()){
             ((HomePageFragment) fragmentTabController.getCurrentFragment()).goBack();
             return true;
         }
