@@ -12,6 +12,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.Gravity;
@@ -237,7 +238,7 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
         RelativeLayout parent = (RelativeLayout) view.findViewById(R.id.parent);
         TextView bt1 = (TextView) view.findViewById(R.id.item_popupwindows_camera);
         TextView bt2 = (TextView) view.findViewById(R.id.item_popupwindows_Photo);
-        Button bt3 = (Button) view.findViewById(R.id.item_popupwindows_cancel);
+        TextView bt3 = (TextView) view.findViewById(R.id.item_popupwindows_cancel);
         parent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -400,7 +401,7 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
                 // 获取图片并显示
                 zqRoundOvalImageView.setImageBitmap(bmp);
                 saveBitmapFile(UtilImags.compressScale(bmp), UtilImags.SHOWFILEURL(UserInfoActivity.this) + "/stscname.jpg");
-                staffFileupload(new File(UtilImags.SHOWFILEURL(UserInfoActivity.this)));
+                staffFileupload(new File(UtilImags.SHOWFILEURL(UserInfoActivity.this)+ "/stscname.jpg"));
             } catch (Exception e) {
                 showToastShort("上传失败");
             }

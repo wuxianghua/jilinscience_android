@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -15,6 +16,7 @@ import cn.palmap.jilinscience.R;
 import cn.palmap.jilinscience.api.UserNameService;
 import cn.palmap.jilinscience.factory.ServiceFactory;
 import cn.palmap.jilinscience.model.ApiCode;
+import cn.palmap.jilinscience.utils.DialogUtils;
 import cn.palmap.jilinscience.utils.SharedPreferenceUtils;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
@@ -60,6 +62,10 @@ public class NicknameActivity extends AppCompatActivity implements View.OnClickL
         switch (v.getId()) {
             case R.id.nick_name_bt:
                 mNickName = mEtNickName.getText().toString().trim();
+                if (TextUtils.isEmpty(mNickName)) {
+                    DialogUtils.showOtherErrorDialog("昵称不能为空！",NicknameActivity.this);
+                    return;
+                }
                 uploadNickName();
                 break;
             case R.id.imageBack:

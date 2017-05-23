@@ -13,7 +13,7 @@ public class StringUtils {
         if (null == str || "".equals(str) || str.length() == 0) {
             return false;
         }
-        Pattern p = Pattern.compile("^((13[0-9])|(15[^4,\\D])|(18[0-9]))\\d{8}$");
+        Pattern p = Pattern.compile("^((13[0-9])|(15[^4])|(18[0,2,3,5-9])|(17[0-8])|(147))\\d{8}$");
         Matcher m = p.matcher(str);
         return m.matches();
     }

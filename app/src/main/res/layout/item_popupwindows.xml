@@ -46,7 +46,7 @@
                 android:textColor="@color/colorHeadImage"
                 android:textSize="15sp"  />
         </LinearLayout>
-        <Button
+        <TextView
             android:id="@+id/item_popupwindows_cancel"
             android:layout_width="330dp"
             android:layout_height="44dp"

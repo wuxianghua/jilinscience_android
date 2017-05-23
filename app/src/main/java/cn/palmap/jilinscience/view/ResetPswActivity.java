@@ -200,8 +200,8 @@ public class ResetPswActivity extends AppCompatActivity implements View.OnClickL
             DialogUtils.showOtherErrorDialog("验证码为空!",ResetPswActivity.this);
             return;
         }
-        if ("".equals(mNewPassword)) {
-            DialogUtils.showOtherErrorDialog("请输入您的新密码",ResetPswActivity.this);
+        if (etNewPassword.getText().toString().length() < 6) {
+            DialogUtils.showOtherErrorDialog("密码长度不小于六位！",ResetPswActivity.this);
             return;
         }
         final ResetPswService resetPswService = ServiceFactory.create(ResetPswService.class);

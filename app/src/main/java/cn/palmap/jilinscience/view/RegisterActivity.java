@@ -121,8 +121,8 @@ public class RegisterActivity extends BaseActivity {
             DialogUtils.showOtherErrorDialog("验证码为空",RegisterActivity.this);
             return;
         }
-        if (TextUtils.isEmpty(editUserPwd.getText().toString())) {
-            DialogUtils.showOtherErrorDialog("你输入的新密码为空",RegisterActivity.this);
+        if (editUserPwd.getText().toString().length() < 6) {
+            DialogUtils.showOtherErrorDialog("密码长度不小于六位！",RegisterActivity.this);
             return;
         }
         ServiceFactory.create(UserService.class)

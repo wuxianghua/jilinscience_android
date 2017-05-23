@@ -114,11 +114,6 @@ public class SelfDialog extends Dialog {
         void onForgetPswClick();
     }
 
-    private String name;
-    private int age;
-    private double height;
-    private double weight;
-
     static class Builder{
         private String dialogTitle;
         private boolean forgetPswIsVisible;

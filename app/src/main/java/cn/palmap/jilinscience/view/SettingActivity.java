@@ -106,7 +106,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         bt1.setText("退出账号");
         TextView bt2 = (TextView) view.findViewById(R.id.item_popupwindows_Photo);
         bt2.setText("关闭程序");
-        Button bt3 = (Button) view.findViewById(R.id.item_popupwindows_cancel);
+        TextView bt3 = (TextView) view.findViewById(R.id.item_popupwindows_cancel);
         parent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
