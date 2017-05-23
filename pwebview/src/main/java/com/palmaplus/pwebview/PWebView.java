@@ -328,6 +328,7 @@ public class PWebView extends FrameLayout implements BeaconConsumer, RangeNotifi
                     webView.callHandler(PWV_ONSCANBEACONS, result.toString(), new CallBackFunction() {
                         @Override
                         public void onCallBack(String data) {
+
                         }
                     });
                 }

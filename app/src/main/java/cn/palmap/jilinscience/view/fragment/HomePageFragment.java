@@ -28,9 +28,7 @@ public class HomePageFragment extends BaseFragment {
 
     Unbinder unbinder;
 
-    private boolean mIsJPushOpenMessage;
-
-    private static final String homeUrl = "http://misc.ipalmap.com/jlstm/#/?";
+    private static final String homeUrl = "http://misc.ipalmap.com/jlstm-app/";
 //    private static final String homeUrl = "http://10.0.10.192:8080/jlstm/";
 
     @Override
