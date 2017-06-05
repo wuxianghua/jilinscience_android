@@ -49,6 +49,7 @@ import cn.palmap.jilinscience.config.ServereConfig;
 import cn.palmap.jilinscience.factory.ServiceFactory;
 import cn.palmap.jilinscience.model.ApiCode;
 import cn.palmap.jilinscience.model.User;
+import cn.palmap.jilinscience.utils.DialogUtils;
 import cn.palmap.jilinscience.utils.FileUtils;
 import cn.palmap.jilinscience.utils.SharedPreferenceUtils;
 import cn.palmap.jilinscience.utils.UtilImags;
@@ -182,10 +183,27 @@ public class UserInfoActivity extends AppCompatActivity implements View.OnClickL
                 currentDay = startDayOfMonth;
                 currentYear = startYear;
                 String textString = currentYear+"-"+currentMonth+"-"+currentDay;
+                if (getTime(textString) > new Date().getTime()) {
+                    DialogUtils.showTimePickerErrorDialog(UserInfoActivity.this);
+                    return;
+                }
                 tvTime.setText(textString);
                 updateUserBirthday(textString);
             }
         }, currentYear, currentMonth-1, currentDay, true).show();
+    }
+
+    private long getTime(String user_time) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Date d;
+        long l = 0;
+        try {
+            d = sdf.parse(user_time);
+            l = d.getTime();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return l;
     }
 
     private void updateUserBirthday(final String birthday) {

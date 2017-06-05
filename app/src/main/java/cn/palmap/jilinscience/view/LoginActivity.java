@@ -224,7 +224,7 @@ public class LoginActivity extends BaseActivity {
 
     private void callRequestCode(String mobile) {
         ServiceFactory.create(UserService.class)
-                .requestCode(mobile)
+                .requestCodeRegister(mobile,2)
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<ApiCode>() {
@@ -233,13 +233,19 @@ public class LoginActivity extends BaseActivity {
                         if (apiCode.getError() == 0) {
                             showMsg("验证码发送成功");
                         } else {
-                            showMsg("验证码发送失败");
+                            DialogUtils.showLoginVerifyErrorDialog(LoginActivity.this);
+                            timeSubscribe.dispose();
+                            tvSendCode.setTag(null);
+                            resetSendTextView();
                         }
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(@NonNull Throwable throwable) throws Exception {
-                        showMsg("验证码发送失败");
+                        DialogUtils.showLoginVerifyErrorDialog(LoginActivity.this);
+                        timeSubscribe.dispose();
+                        tvSendCode.setTag(null);
+                        resetSendTextView();
                     }
                 });
     }

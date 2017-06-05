@@ -246,12 +246,18 @@ public class RegisterActivity extends BaseActivity {
                             showMsg("验证码发送成功");
                         } else {
                             DialogUtils.showVerifyErrorDialog(RegisterActivity.this);
+                            timeSubscribe.dispose();
+                            tvSendCode.setTag(null);
+                            resetSendTextView();
                         }
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(@NonNull Throwable throwable) throws Exception {
                         DialogUtils.showVerifyErrorDialog(RegisterActivity.this);
+                        timeSubscribe.dispose();
+                        tvSendCode.setTag(null);
+                        resetSendTextView();
                     }
                 });
     }

@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 
-import cn.palmap.jilinscience.view.LoginActivity;
 import cn.palmap.jilinscience.view.RegisterActivity;
 
 /**
@@ -50,6 +49,42 @@ public class DialogUtils {
             @Override
             public void onForgetPswClick() {
                 context.finish();
+            }
+        });
+        dialog.setInputAgainOnclickListener(new SelfDialog.OnInputAgainOnclickListener() {
+            @Override
+            public void onInputAgainClick() {
+                dialog.dismiss();
+            }
+        });
+    }
+
+    public static void showLoginVerifyErrorDialog(final Activity context) {
+        SelfDialog.Builder builder = new SelfDialog.Builder();
+        final SelfDialog dialog = builder.title("该手机号还没注册！").switchButton("注册").forgetPswVisible(true).build(context);
+        dialog.show();
+        dialog.setForgetPswOnclickListener(new SelfDialog.OnForgetPswOnclickListener() {
+            @Override
+            public void onForgetPswClick() {
+                context.startActivity(new Intent(context,RegisterActivity.class));
+            }
+        });
+        dialog.setInputAgainOnclickListener(new SelfDialog.OnInputAgainOnclickListener() {
+            @Override
+            public void onInputAgainClick() {
+                dialog.dismiss();
+            }
+        });
+    }
+
+    public static void showTimePickerErrorDialog(final Activity context) {
+        SelfDialog.Builder builder = new SelfDialog.Builder();
+        final SelfDialog dialog = builder.title("不能选择未来时间！").forgetPswVisible(false).build(context);
+        dialog.show();
+        dialog.setForgetPswOnclickListener(new SelfDialog.OnForgetPswOnclickListener() {
+            @Override
+            public void onForgetPswClick() {
+                context.startActivity(new Intent(context,RegisterActivity.class));
             }
         });
         dialog.setInputAgainOnclickListener(new SelfDialog.OnInputAgainOnclickListener() {

@@ -74,7 +74,10 @@ public class MineFragment extends BaseFragment {
             user = unPersistUserInfo();
             App.getInstance().setUser(user);
         }
+        initUerInfo();
+    }
 
+    private void initUerInfo() {
         if (user == null) {
             imageSex.setVisibility(View.GONE);
             return;
@@ -145,7 +148,8 @@ public class MineFragment extends BaseFragment {
 
     @OnClick(R.id.tvSetting)
     public void onSettingItemClick(){
-        startActivity(new Intent(getActivity(),SettingActivity.class));
+        startActivityForResult(new Intent(getActivity(),SettingActivity.class),
+                MainActivity.CODE_SETTING);
         return;
     }
 
@@ -155,6 +159,10 @@ public class MineFragment extends BaseFragment {
         if (requestCode == MainActivity.CODE_LOGIN && resultCode == RESULT_OK) {
             user = App.getInstance().getUser();
             initUserView();
+        }else {
+            imageHead.setImageDrawable(getResources().getDrawable(R.mipmap.ic_my_head));
+            tvUserName.setText(getResources().getString(R.string.txt_noLogin));
+            imageSex.setVisibility(View.GONE);
         }
     }
 

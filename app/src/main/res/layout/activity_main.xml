@@ -5,12 +5,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="cn.palmap.jilinscience.view.MainActivity">
-
     <FrameLayout
         android:layout_above="@+id/layoutTab"
         android:id="@+id/fragmentContainer"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:visibility="visible"/>
+
+    <ImageView
+        android:id="@+id/flash"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@mipmap/flash"
+        android:visibility="gone"
+        />
 
     <LinearLayout
         android:id="@+id/layoutTab"
@@ -52,7 +60,8 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            >
 
             <ImageView
                 android:id="@+id/iv_tab_mine"

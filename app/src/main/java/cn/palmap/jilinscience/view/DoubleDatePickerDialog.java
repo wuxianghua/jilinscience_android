@@ -16,8 +16,6 @@
 
 package cn.palmap.jilinscience.view;
 
-import java.lang.reflect.Field;
-
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -27,6 +25,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.DatePicker.OnDateChangedListener;
+
+import java.lang.reflect.Field;
 
 import cn.palmap.jilinscience.R;
 

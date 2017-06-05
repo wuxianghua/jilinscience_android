@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.palmaplus.pwebview.PWebView;
+import com.tencent.smtt.sdk.WebView;
+import com.tencent.smtt.sdk.WebViewClient;
 
 import org.json.JSONObject;
 
@@ -29,8 +31,9 @@ public class HomePageFragment extends BaseFragment {
 
     Unbinder unbinder;
     private User mUser;
+    private boolean isLoad;
 
-    private static final String homeUrl = "http://misc.ipalmap.com/jlstm-app/#/main";
+    private static final String homeUrl = "http://misc.ipalmap.com/jlstm-app";
 //    private static final String homeUrl = "http://10.0.10.192:8080/jlstm/";
 
     @Override
@@ -45,10 +48,26 @@ public class HomePageFragment extends BaseFragment {
         mUser = App.getInstance().getUser();
         if (mUser != null) {
             webView.loadURL(homeUrl+"?"+mUser.getLoginName());
-            dealWithJPushMessage(mUser.getLoginName());
+            webView.setWebViewClient(new WebViewClient(){
+                @Override
+                public void onPageFinished(WebView view, String url) {
+                    super.onPageFinished(view, url);
+                    if (!isLoad) {
+                        dealWithJPushMessage(mUser.getLoginName());
+                    }
+                }
+            });
         } else {
             webView.loadURL(homeUrl);
-            dealWithJPushMessage(null);
+            webView.setWebViewClient(new WebViewClient(){
+                @Override
+                public void onPageFinished(WebView view, String url) {
+                    super.onPageFinished(view, url);
+                    if (!isLoad) {
+                        dealWithJPushMessage(null);
+                    }
+                }
+            });
         }
     }
 
@@ -66,6 +85,7 @@ public class HomePageFragment extends BaseFragment {
                 return;
             }
             webView.loadURL(homeUrl+"/#/intro/"+myValue+"?"+mLoginName);
+            isLoad = true;
         }
     }
 
@@ -79,16 +99,6 @@ public class HomePageFragment extends BaseFragment {
 
     public boolean canGoBack() {
         return webView.canGoBack();
-    }
-
-    public boolean isHomePage() {
-        if (homeUrl.equals(webView.getUrl())){
-            return false;
-        } else {
-            webView.loadURL(homeUrl);
-            return true;
-        }
-
     }
 
     public void goBack() {

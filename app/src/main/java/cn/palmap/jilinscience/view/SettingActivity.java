@@ -3,14 +3,12 @@ package cn.palmap.jilinscience.view;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
@@ -126,13 +124,9 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         });
         bt1.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                mExitIntent = new Intent(SettingActivity.this,MainActivity.class);
-                mExitIntent.setAction("exit_app");
-                startActivity(mExitIntent);
                 deletePersistFile();
                 finish();
                 App.getInstance().setUser(null);
-
                 pop.dismiss();
                 ll_popup.clearAnimation();
             }

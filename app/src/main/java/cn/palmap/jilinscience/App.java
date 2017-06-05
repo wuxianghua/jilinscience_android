@@ -27,6 +27,7 @@ public class App extends BaseApplication {
     private boolean mIsAcceptNotification;
     private boolean mIsSoundNotification;
     private boolean mIsShockNotification;
+    public boolean isFirstOpenApp = true;
 
     @Override
     public void onCreate() {
