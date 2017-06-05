@@ -26,7 +26,7 @@ public class HelpActivity extends AppCompatActivity implements View.OnClickListe
         App.getInstance().addActivity(this);
         initView();
         initEvent();
-        webView.loadURL("http://misc.ipalmap.com/jlstm/#/guide/3");
+        webView.loadURL("http://misc.ipalmap.com/jlstm-wx/#/guide/3");
     }
 
     private void initEvent() {

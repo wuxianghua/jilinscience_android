@@ -26,6 +26,7 @@ dependencies {
     provided('org.altbeacon:android-beacon-library:2.9.2', {
         exclude group: 'com.android.support'
     })
+    compile project(':jsBridge')
 }
 
 repositories {

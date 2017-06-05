@@ -31,8 +31,6 @@
                 android:id="@+id/forget_password"
                 android:layout_width="48dp"
                 android:layout_height="match_parent"
-                android:background="@null"
-                android:singleLine="true"
                 android:layout_marginLeft="120dp"
                 android:text="忘记密码"
                 android:textColor="#078bd7"

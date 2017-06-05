@@ -2,8 +2,6 @@ package cn.palmap.jilinscience.view;
 
 import android.app.Notification;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -24,9 +22,9 @@ public class NotificationActivity extends AppCompatActivity implements View.OnCl
     private ImageView mNotificationSound;
     private ImageView mNotificationShock;
     private ImageView mImageBack;
-    private boolean mIsAcceptNotification = false;
-    private boolean mIsShockNotification = false;
-    private boolean mIsSoundNotification = false;
+    private boolean mIsAcceptNotification;
+    private boolean mIsShockNotification;
+    private boolean mIsSoundNotification;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -39,9 +37,9 @@ public class NotificationActivity extends AppCompatActivity implements View.OnCl
     }
 
     private void initData() {
-        mIsAcceptNotification = SharedPreferenceUtils.getValue(this,"notification","mIsAcceptNotification",false);
+        mIsAcceptNotification = SharedPreferenceUtils.getValue(this,"notification","mIsAcceptNotification",true);
         mIsShockNotification = SharedPreferenceUtils.getValue(this,"notification","mIsShockNotification",false);
-        mIsSoundNotification = SharedPreferenceUtils.getValue(this,"notification","mIsSoundNotification",false);
+        mIsSoundNotification = SharedPreferenceUtils.getValue(this,"notification","mIsSoundNotification",true);
         updateItemSwitch(mNotificationAccept,mIsAcceptNotification);
         updateItemSwitch(mNotificationSound,mIsSoundNotification);
         updateItemSwitch(mNotificationShock,mIsShockNotification);

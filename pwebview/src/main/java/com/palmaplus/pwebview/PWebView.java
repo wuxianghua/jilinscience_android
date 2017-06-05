@@ -8,10 +8,10 @@ import android.os.Build;
 import android.os.RemoteException;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.webkit.WebChromeClient;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
+import com.tencent.smtt.sdk.WebChromeClient;
+import com.tencent.smtt.sdk.WebSettings;
+import com.tencent.smtt.sdk.WebView;
+import com.tencent.smtt.sdk.WebViewClient;
 import android.widget.FrameLayout;
 
 import com.github.lzyzsd.jsbridge.BridgeHandler;

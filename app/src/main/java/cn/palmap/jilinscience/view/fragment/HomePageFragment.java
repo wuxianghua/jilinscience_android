@@ -14,9 +14,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import cn.jpush.android.api.JPushInterface;
+import cn.palmap.jilinscience.App;
 import cn.palmap.jilinscience.R;
 import cn.palmap.jilinscience.base.BaseFragment;
-import cn.palmap.jilinscience.utils.DialogUtils;
+import cn.palmap.jilinscience.model.User;
 
 /**
  * Created by 王天明 on 2017/5/8.
@@ -27,8 +28,9 @@ public class HomePageFragment extends BaseFragment {
     @BindView(R.id.webView) PWebView webView;
 
     Unbinder unbinder;
+    private User mUser;
 
-    private static final String homeUrl = "http://misc.ipalmap.com/jlstm-app";
+    private static final String homeUrl = "http://misc.ipalmap.com/jlstm-app/#/main";
 //    private static final String homeUrl = "http://10.0.10.192:8080/jlstm/";
 
     @Override
@@ -40,11 +42,17 @@ public class HomePageFragment extends BaseFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         unbinder = ButterKnife.bind(this, rootView);
-        webView.loadURL(homeUrl);
-        dealWithJPushMessage();
+        mUser = App.getInstance().getUser();
+        if (mUser != null) {
+            webView.loadURL(homeUrl+"?"+mUser.getLoginName());
+            dealWithJPushMessage(mUser.getLoginName());
+        } else {
+            webView.loadURL(homeUrl);
+            dealWithJPushMessage(null);
+        }
     }
 
-    private void dealWithJPushMessage() {
+    private void dealWithJPushMessage(String mLoginName) {
         Intent intent = getActivity().getIntent();
         String action = intent.getAction();
         Bundle bundle = intent.getExtras();
@@ -57,7 +65,7 @@ public class HomePageFragment extends BaseFragment {
             } catch (Exception e) {
                 return;
             }
-            webView.loadURL(myValue);
+            webView.loadURL(homeUrl+"/#/intro/"+myValue+"?"+mLoginName);
         }
     }
 

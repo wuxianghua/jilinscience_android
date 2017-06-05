@@ -23,6 +23,15 @@ public interface UserService {
      */
     @FormUrlEncoded
     @POST("/jlsci/app/messageVerify")
+    Observable<ApiCode> requestCodeRegister(@Field("phone") String mobile,@Field("isRegister") int register);
+
+    /**
+     * 根据手机号码请求
+     * @param mobile
+     * @return
+     */
+    @FormUrlEncoded
+    @POST("/jlsci/app/messageVerify")
     Observable<ApiCode> requestCode(@Field("phone") String mobile);
 
     /**

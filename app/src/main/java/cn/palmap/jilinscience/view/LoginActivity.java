@@ -1,8 +1,8 @@
 package cn.palmap.jilinscience.view;
 
-import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
@@ -58,6 +59,9 @@ public class LoginActivity extends BaseActivity {
     private boolean isUsePwdLogin = true;
 
     private Disposable timeSubscribe;
+    private Bundle mBundle;
+    private String mPhone;
+    private String mPassword;
 
     @Override
     protected int layoutId() {
@@ -106,69 +110,9 @@ public class LoginActivity extends BaseActivity {
                 return;
             }
         }
-        final UserService userService = ServiceFactory.create(UserService.class);
-        final String phone = editUserName.getText().toString();
-        Observable<ApiCode> apiCodeObservable =
-                isUsePwdLogin ?
-                userService.loginByPassword(phone,editUserPwd.getText().toString()):
-                userService.loginByAuth(phone,editUserCode.getText().toString());
-
-        apiCodeObservable.subscribeOn(Schedulers.computation())
-                .observeOn(AndroidSchedulers.mainThread())
-                .flatMap(new Function<ApiCode, ObservableSource<ApiCode>>() {
-                    @Override
-                    public ObservableSource<ApiCode> apply(@NonNull final ApiCode apiCode) throws Exception {
-                        if (apiCode.getError() == 0) {
-                            SharedPreferenceUtils.putValue(LoginActivity.this,"UserInfo","customId",apiCode.getMsg());
-                            SharedPreferenceUtils.putValue(LoginActivity.this,"UserInfo","phone",phone);
-                            return userService.getUser(phone + ";" + apiCode.getMsg())
-                                    .subscribeOn(Schedulers.computation())
-                                    .observeOn(AndroidSchedulers.mainThread())
-                                    .flatMap(new Function<User, ObservableSource<ApiCode>>() {
-                                @Override
-                                public ObservableSource<ApiCode> apply(@NonNull User user) throws Exception {
-                                    App.getInstance().setUser(user);
-                                    FileUtils.persistUserInfo(user,LoginActivity.this);
-                                    final ApiCode apiCode1 = new ApiCode();
-                                    apiCode1.setError(0);
-                                    return Observable.create(new ObservableOnSubscribe<ApiCode>() {
-                                        @Override
-                                        public void subscribe(@NonNull ObservableEmitter<ApiCode> e) throws Exception {
-                                            e.onNext(apiCode1);
-                                            e.onComplete();
-                                        }
-                                    });
-                                }
-                            });
-                        } else {
-                            showMsg("登录失败 :" + apiCode.getMsg());
-                            return Observable.create(new ObservableOnSubscribe<ApiCode>() {
-                                @Override
-                                public void subscribe(@NonNull ObservableEmitter<ApiCode> e) throws Exception {
-                                    e.onNext(apiCode);
-                                    e.onComplete();
-                                }
-                            });
-                        }
-                    }
-                })
-                .subscribe(new Consumer<ApiCode>() {
-                    @Override
-                    public void accept(@NonNull ApiCode apiCode) throws Exception {
-                        if (apiCode.getError() == 0) {
-                            showMsg("登录成功");
-                            setResult(RESULT_OK);
-                            finish();
-                        } else {
-                            showMsg("登录失败 :" + apiCode.getMsg());
-                        }
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(@NonNull Throwable throwable) throws Exception {
-                        showMsg("登录失败 :" + throwable.getMessage());
-                    }
-                });
+        String phone = editUserName.getText().toString();
+        String password = editUserPwd.getText().toString();
+        loginClick(phone,password);
     }
 
     @OnClick(R.id.tvSendCode)
@@ -213,6 +157,71 @@ public class LoginActivity extends BaseActivity {
         }
     }
 
+    public void loginClick(final String phone, String password) {
+        final UserService userService = ServiceFactory.create(UserService.class);
+        Observable<ApiCode> apiCodeObservable =
+                isUsePwdLogin ?
+                        userService.loginByPassword(phone,password):
+                        userService.loginByAuth(phone,editUserCode.getText().toString());
+
+        apiCodeObservable.subscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread())
+                .flatMap(new Function<ApiCode, ObservableSource<ApiCode>>() {
+                    @Override
+                    public ObservableSource<ApiCode> apply(@NonNull final ApiCode apiCode) throws Exception {
+                        if (apiCode.getError() == 0) {
+                            SharedPreferenceUtils.putValue(LoginActivity.this,"UserInfo","customId",apiCode.getMsg());
+                            SharedPreferenceUtils.putValue(LoginActivity.this,"UserInfo","phone",phone);
+                            return userService.getUser(phone + ";" + apiCode.getMsg())
+                                    .subscribeOn(Schedulers.computation())
+                                    .observeOn(AndroidSchedulers.mainThread())
+                                    .flatMap(new Function<User, ObservableSource<ApiCode>>() {
+                                        @Override
+                                        public ObservableSource<ApiCode> apply(@NonNull User user) throws Exception {
+                                            App.getInstance().setUser(user);
+                                            FileUtils.persistUserInfo(user,LoginActivity.this);
+                                            final ApiCode apiCode1 = new ApiCode();
+                                            apiCode1.setError(0);
+                                            return Observable.create(new ObservableOnSubscribe<ApiCode>() {
+                                                @Override
+                                                public void subscribe(@NonNull ObservableEmitter<ApiCode> e) throws Exception {
+                                                    e.onNext(apiCode1);
+                                                    e.onComplete();
+                                                }
+                                            });
+                                        }
+                                    });
+                        } else {
+                            showMsg("登录失败 :" + apiCode.getMsg());
+                            return Observable.create(new ObservableOnSubscribe<ApiCode>() {
+                                @Override
+                                public void subscribe(@NonNull ObservableEmitter<ApiCode> e) throws Exception {
+                                    e.onNext(apiCode);
+                                    e.onComplete();
+                                }
+                            });
+                        }
+                    }
+                })
+                .subscribe(new Consumer<ApiCode>() {
+                    @Override
+                    public void accept(@NonNull ApiCode apiCode) throws Exception {
+                        if (apiCode.getError() == 0) {
+                            showMsg("登录成功");
+                            setResult(RESULT_OK);
+                            finish();
+                        } else {
+                            showMsg("登录失败 :" + apiCode.getMsg());
+                        }
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(@NonNull Throwable throwable) throws Exception {
+                        showMsg("登录失败 :" + throwable.getMessage());
+                    }
+                });
+    }
+
     private void callRequestCode(String mobile) {
         ServiceFactory.create(UserService.class)
                 .requestCode(mobile)
@@ -247,7 +256,7 @@ public class LoginActivity extends BaseActivity {
 
     @OnClick(R.id.tvRight)
     public void registerClick(){
-        startActivity(new Intent(this,RegisterActivity.class));
+        startActivity(new Intent(this, RegisterActivity.class));
     }
 
     private void resetSendTextView() {

@@ -52,6 +52,7 @@
 
         <EditText
             android:id="@+id/editUserName"
+            android:inputType="number"
             android:layout_width="match_parent"
             android:layout_height="54dp"
             android:layout_margin="30dp"

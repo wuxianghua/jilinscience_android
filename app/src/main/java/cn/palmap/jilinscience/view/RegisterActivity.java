@@ -1,6 +1,8 @@
 package cn.palmap.jilinscience.view;
 
+import android.content.Intent;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.text.TextUtils;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -12,6 +14,7 @@ import java.util.concurrent.TimeUnit;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import cn.palmap.jilinscience.App;
 import cn.palmap.jilinscience.R;
 import cn.palmap.jilinscience.api.UserService;
 import cn.palmap.jilinscience.base.BaseActivity;
@@ -19,9 +22,14 @@ import cn.palmap.jilinscience.di.component.DaggerViewComponent;
 import cn.palmap.jilinscience.di.module.MainModule;
 import cn.palmap.jilinscience.factory.ServiceFactory;
 import cn.palmap.jilinscience.model.ApiCode;
+import cn.palmap.jilinscience.model.User;
 import cn.palmap.jilinscience.utils.DialogUtils;
+import cn.palmap.jilinscience.utils.FileUtils;
+import cn.palmap.jilinscience.utils.SharedPreferenceUtils;
 import cn.palmap.jilinscience.utils.StringUtils;
 import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.ObservableSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
@@ -45,6 +53,11 @@ public class RegisterActivity extends BaseActivity {
     @BindView(R.id.btnRegister) TextView btnRegister;
 
     private Disposable timeSubscribe;
+    private Intent data;
+    private Bundle mBundle;
+    private String mPhone;
+    private String mPassword;
+    private String mAuth;
 
     @Override
     protected int layoutId() {
@@ -64,6 +77,8 @@ public class RegisterActivity extends BaseActivity {
         StatusBarCompat.setStatusBarColor(this, Color.WHITE);
         ButterKnife.bind(this);
         tvSendCode.setSelected(true);
+        data = new Intent();
+        mBundle = new Bundle();
     }
 
     @OnClick(R.id.tvSendCode)
@@ -109,6 +124,9 @@ public class RegisterActivity extends BaseActivity {
 
     @OnClick(R.id.btnRegister)
     public void registerClick() {
+        mPhone = editUserName.getText().toString();
+        mPassword = editUserPwd.getText().toString();
+        mAuth =  editUserCode.getText().toString();
         if (TextUtils.isEmpty(editUserName.getText().toString())) {
             DialogUtils.showOtherErrorDialog("请输入正确的手机号",RegisterActivity.this);
             return;
@@ -126,10 +144,9 @@ public class RegisterActivity extends BaseActivity {
             return;
         }
         ServiceFactory.create(UserService.class)
-                .registerUser(
-                        editUserName.getText().toString(),
-                        editUserPwd.getText().toString(),
-                        editUserCode.getText().toString()
+                .registerUser(mPhone,
+                        mPassword,
+                        mAuth
                 ).subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<ApiCode>() {
@@ -137,7 +154,7 @@ public class RegisterActivity extends BaseActivity {
                     public void accept(@NonNull ApiCode apiCode) throws Exception {
                         if (apiCode.getError() == 0) {
                             showMsg("注册成功");
-                            finish();
+                            loginClick(mPhone,mPassword);
                         } else {
                             showMsg("注册失败 :" + apiCode.getMsg());
                         }
@@ -150,13 +167,76 @@ public class RegisterActivity extends BaseActivity {
                 });
     }
 
+    public void loginClick(final String phone, String password) {
+        final UserService userService = ServiceFactory.create(UserService.class);
+        Observable<ApiCode> apiCodeObservable = userService.loginByPassword(phone,password);
+        apiCodeObservable.subscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread())
+                .flatMap(new Function<ApiCode, ObservableSource<ApiCode>>() {
+                    @Override
+                    public ObservableSource<ApiCode> apply(@NonNull final ApiCode apiCode) throws Exception {
+                        if (apiCode.getError() == 0) {
+                            SharedPreferenceUtils.putValue(RegisterActivity.this,"UserInfo","customId",apiCode.getMsg());
+                            SharedPreferenceUtils.putValue(RegisterActivity.this,"UserInfo","phone",phone);
+                            return userService.getUser(phone + ";" + apiCode.getMsg())
+                                    .subscribeOn(Schedulers.computation())
+                                    .observeOn(AndroidSchedulers.mainThread())
+                                    .flatMap(new Function<User, ObservableSource<ApiCode>>() {
+                                        @Override
+                                        public ObservableSource<ApiCode> apply(@NonNull User user) throws Exception {
+                                            App.getInstance().setUser(user);
+                                            FileUtils.persistUserInfo(user,RegisterActivity.this);
+                                            final ApiCode apiCode1 = new ApiCode();
+                                            apiCode1.setError(0);
+                                            return Observable.create(new ObservableOnSubscribe<ApiCode>() {
+                                                @Override
+                                                public void subscribe(@NonNull ObservableEmitter<ApiCode> e) throws Exception {
+                                                    e.onNext(apiCode1);
+                                                    e.onComplete();
+                                                }
+                                            });
+                                        }
+                                    });
+                        } else {
+                            showMsg("登录失败 :" + apiCode.getMsg());
+                            return Observable.create(new ObservableOnSubscribe<ApiCode>() {
+                                @Override
+                                public void subscribe(@NonNull ObservableEmitter<ApiCode> e) throws Exception {
+                                    e.onNext(apiCode);
+                                    e.onComplete();
+                                }
+                            });
+                        }
+                    }
+                })
+                .subscribe(new Consumer<ApiCode>() {
+                    @Override
+                    public void accept(@NonNull ApiCode apiCode) throws Exception {
+                        if (apiCode.getError() == 0) {
+                            showMsg("登录成功");
+                            Intent mExitIntent = new Intent(RegisterActivity.this,MainActivity.class);
+                            mExitIntent.setAction("exit_app");
+                            startActivity(mExitIntent);
+                            finish();
+                        } else {
+                            showMsg("登录失败 :" + apiCode.getMsg());
+                        }
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(@NonNull Throwable throwable) throws Exception {
+                        showMsg("登录失败 :" + throwable.getMessage());
+                    }
+                });
+    }
+
     private boolean checkMobile(String s) {
         return StringUtils.checkMobile(s);
     }
 
     private void callRequestCode(String mobile) {
         ServiceFactory.create(UserService.class)
-                .requestCode(mobile)
+                .requestCodeRegister(mobile,1)
                 .subscribeOn(Schedulers.computation())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<ApiCode>() {
@@ -165,13 +245,13 @@ public class RegisterActivity extends BaseActivity {
                         if (apiCode.getError() == 0) {
                             showMsg("验证码发送成功");
                         } else {
-                            showMsg("验证码发送失败");
+                            DialogUtils.showVerifyErrorDialog(RegisterActivity.this);
                         }
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(@NonNull Throwable throwable) throws Exception {
-                        showMsg("验证码发送失败");
+                        DialogUtils.showVerifyErrorDialog(RegisterActivity.this);
                     }
                 });
     }

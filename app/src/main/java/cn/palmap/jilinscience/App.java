@@ -2,7 +2,6 @@ package cn.palmap.jilinscience;
 
 import android.app.Activity;
 import android.app.Notification;
-import android.content.Intent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,9 +37,9 @@ public class App extends BaseApplication {
     }
 
     private void initData() {
-        mIsAcceptNotification = SharedPreferenceUtils.getValue(this,"notification","mIsAcceptNotification",false);
+        mIsAcceptNotification = SharedPreferenceUtils.getValue(this,"notification","mIsAcceptNotification",true);
         mIsShockNotification = SharedPreferenceUtils.getValue(this,"notification","mIsShockNotification",false);
-        mIsSoundNotification = SharedPreferenceUtils.getValue(this,"notification","mIsSoundNotification",false);
+        mIsSoundNotification = SharedPreferenceUtils.getValue(this,"notification","mIsSoundNotification",true);
     }
 
     private void registerJPushMessage() {

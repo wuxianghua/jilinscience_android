@@ -19,6 +19,7 @@ public class SelfDialog extends Dialog {
     private TextView titleTv;//消息标题文本
     private boolean forgetPswIsVisible;
     private String  dialogTitle;
+    private String dialogContent;
 
     private OnForgetPswOnclickListener mOnForgetPswclickListener;//忘记密码按钮被点击了的监听器
     private OnInputAgainOnclickListener mOnInputAgainclickListener;//重新输入按钮被点击了的监听器
@@ -45,6 +46,7 @@ public class SelfDialog extends Dialog {
         super(context);
         this.forgetPswIsVisible = builder.forgetPswIsVisible;
         this.dialogTitle = builder.dialogTitle;
+        this.dialogContent = builder.button;
     }
 
     @Override
@@ -92,6 +94,7 @@ public class SelfDialog extends Dialog {
         forgetPassword = (TextView) findViewById(R.id.forget_password);
         titleTv = (TextView) findViewById(R.id.title);
         titleTv.setText(dialogTitle);
+        forgetPassword.setText(dialogContent);
         setForgetPswViewVisible(forgetPswIsVisible);
     }
 
@@ -116,6 +119,7 @@ public class SelfDialog extends Dialog {
 
     static class Builder{
         private String dialogTitle;
+        private String button;
         private boolean forgetPswIsVisible;
         public Builder title(String dialogTitle){
             this.dialogTitle=dialogTitle;
@@ -125,6 +129,12 @@ public class SelfDialog extends Dialog {
             this.forgetPswIsVisible=forgetPswIsVisible;
             return this;
         }
+
+        public Builder switchButton(String button){
+            this.button=button;
+            return this;
+        }
+
         public SelfDialog build(Context context){
             return new SelfDialog(context,this);
         }

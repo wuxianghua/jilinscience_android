@@ -40,9 +40,6 @@ dependencies {
     compile('com.github.niorgai:StatusBarCompat:2.1.2', {
         exclude group: 'com.android.support'
     })
-    compile('com.github.lzyzsd:jsbridge:1.0.4', {
-        exclude group: 'com.android.support'
-    })
     compile('org.altbeacon:android-beacon-library:2.9.2', {
         exclude group: 'com.android.support'
     })

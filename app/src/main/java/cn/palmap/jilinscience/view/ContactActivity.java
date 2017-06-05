@@ -26,7 +26,7 @@ public class ContactActivity extends AppCompatActivity implements View.OnClickLi
         App.getInstance().addActivity(this);
         initView();
         initEvent();
-        webView.loadURL("http://misc.ipalmap.com/jlstm/#/guide/4");
+        webView.loadURL("http://misc.ipalmap.com/jlstm-wx/#/guide/4");
     }
 
     private void initEvent() {

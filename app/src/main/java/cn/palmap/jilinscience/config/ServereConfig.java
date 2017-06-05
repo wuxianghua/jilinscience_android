@@ -6,8 +6,8 @@ package cn.palmap.jilinscience.config;
 
 public class ServereConfig {
 
-    public static final String HOST = "http://bi.palmap.cn";
-    public static final String HEAD_ROOT_HOST = "http://bi.palmap.cn/jlrepository/";
+    public static final String HOST = "http://139.215.193.116";
+    public static final String HEAD_ROOT_HOST = "http://139.215.193.116/jlrepository/";
 
     public static final String CECHE_FILE = "/wtmCache";
     public static final long CECHE_SIZE = 30 * 1024 * 1024;

@@ -1,5 +1,6 @@
 package cn.palmap.jilinscience.utils;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 
@@ -25,12 +26,30 @@ public class DialogUtils {
 
     public static void showPswErrorDialog(final Context context) {
         SelfDialog.Builder builder = new SelfDialog.Builder();
-        final SelfDialog dialog = builder.title("密码输入错误！").forgetPswVisible(true).build(context);
+        final SelfDialog dialog = builder.title("密码输入错误！").switchButton("忘记密码").forgetPswVisible(true).build(context);
         dialog.show();
         dialog.setForgetPswOnclickListener(new SelfDialog.OnForgetPswOnclickListener() {
             @Override
             public void onForgetPswClick() {
                 context.startActivity(new Intent(context,RegisterActivity.class));
+            }
+        });
+        dialog.setInputAgainOnclickListener(new SelfDialog.OnInputAgainOnclickListener() {
+            @Override
+            public void onInputAgainClick() {
+                dialog.dismiss();
+            }
+        });
+    }
+
+    public static void showVerifyErrorDialog(final Activity context) {
+        SelfDialog.Builder builder = new SelfDialog.Builder();
+        final SelfDialog dialog = builder.title("该手机号已被注册！").switchButton("返回登录").forgetPswVisible(true).build(context);
+        dialog.show();
+        dialog.setForgetPswOnclickListener(new SelfDialog.OnForgetPswOnclickListener() {
+            @Override
+            public void onForgetPswClick() {
+                context.finish();
             }
         });
         dialog.setInputAgainOnclickListener(new SelfDialog.OnInputAgainOnclickListener() {
