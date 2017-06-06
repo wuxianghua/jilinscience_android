@@ -99,7 +99,8 @@ public class MainActivity extends BaseActivity implements FragmentTabController.
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        ((HomePageFragment) fragmentTabController.getCurrentFragment()).onNewIntent();
+        fragmentTabController.changeTab(0);
+        ((HomePageFragment) fragmentTabController.getCurrentFragment()).onNewIntent(intent);
     }
 
     @Override

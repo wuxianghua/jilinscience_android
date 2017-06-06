@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.palmaplus.pwebview.PWebView;
 import com.tencent.smtt.sdk.WebView;
@@ -45,11 +46,8 @@ public class HomePageFragment extends BaseFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         unbinder = ButterKnife.bind(this, rootView);
-        loadUrl();
-    }
-
-    private void loadUrl() {
         mUser = App.getInstance().getUser();
+        final Intent intent = getActivity().getIntent();
         if (mUser != null) {
             webView.loadURL(homeUrl+"/#/main"+"?"+mUser.getLoginName());
             webView.setWebViewClient(new WebViewClient(){
@@ -57,7 +55,7 @@ public class HomePageFragment extends BaseFragment {
                 public void onPageFinished(WebView view, String url) {
                     super.onPageFinished(view, url);
                     if (!isLoad) {
-                        dealWithJPushMessage(mUser.getLoginName());
+                        dealWithJPushMessage(mUser.getLoginName(),intent);
                     }
                 }
             });
@@ -68,19 +66,24 @@ public class HomePageFragment extends BaseFragment {
                 public void onPageFinished(WebView view, String url) {
                     super.onPageFinished(view, url);
                     if (!isLoad) {
-                        dealWithJPushMessage(null);
+                        dealWithJPushMessage(null,intent);
                     }
                 }
             });
         }
     }
 
-    public void onNewIntent() {
-        loadUrl();
+
+    public void onNewIntent(Intent intent) {
+
+        if (mUser != null) {
+            dealWithJPushMessage(mUser.getLoginName(),intent);
+        } else {
+            dealWithJPushMessage(null,intent);
+        }
     }
 
-    private void dealWithJPushMessage(String mLoginName) {
-        Intent intent = getActivity().getIntent();
+    private void dealWithJPushMessage(String mLoginName,Intent intent) {
         String action = intent.getAction();
         Bundle bundle = intent.getExtras();
         if ("open_message".equals(action)) {
