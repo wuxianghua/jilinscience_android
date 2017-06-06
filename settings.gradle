@@ -1,1 +1,1 @@
-include ':app', ':pwebview', ':jsBridge'
+include ':app', ':pwebview'

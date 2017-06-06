@@ -45,9 +45,13 @@ public class HomePageFragment extends BaseFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         unbinder = ButterKnife.bind(this, rootView);
+        loadUrl();
+    }
+
+    private void loadUrl() {
         mUser = App.getInstance().getUser();
         if (mUser != null) {
-            webView.loadURL(homeUrl+"?"+mUser.getLoginName());
+            webView.loadURL(homeUrl+"/#/main"+"?"+mUser.getLoginName());
             webView.setWebViewClient(new WebViewClient(){
                 @Override
                 public void onPageFinished(WebView view, String url) {
@@ -58,7 +62,7 @@ public class HomePageFragment extends BaseFragment {
                 }
             });
         } else {
-            webView.loadURL(homeUrl);
+            webView.loadURL(homeUrl+"/#/main");
             webView.setWebViewClient(new WebViewClient(){
                 @Override
                 public void onPageFinished(WebView view, String url) {
@@ -69,6 +73,10 @@ public class HomePageFragment extends BaseFragment {
                 }
             });
         }
+    }
+
+    public void onNewIntent() {
+        loadUrl();
     }
 
     private void dealWithJPushMessage(String mLoginName) {

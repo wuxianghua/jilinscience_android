@@ -97,6 +97,12 @@ public class MainActivity extends BaseActivity implements FragmentTabController.
     }
 
     @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        ((HomePageFragment) fragmentTabController.getCurrentFragment()).onNewIntent();
+    }
+
+    @Override
     protected void onInjected() {
         reLoginApp();
         if (App.getInstance().isFirstOpenApp) {

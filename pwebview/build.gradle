@@ -19,6 +19,7 @@ android {
 }
 
 dependencies {
+    //compile project(':jsBridge')
     compile fileTree(include: ['*.jar'], dir: 'libs')
     provided('com.github.lzyzsd:jsbridge:1.0.4', {
         exclude group: 'com.android.support'
