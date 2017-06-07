@@ -3,22 +3,22 @@ package com.palmaplus.pwebview;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.RemoteException;
 import android.util.AttributeSet;
 import android.util.Log;
-import com.tencent.smtt.sdk.WebChromeClient;
-import com.tencent.smtt.sdk.WebSettings;
-import com.tencent.smtt.sdk.WebView;
-import com.tencent.smtt.sdk.WebViewClient;
 import android.widget.FrameLayout;
 
 import com.github.lzyzsd.jsbridge.BridgeHandler;
+import com.github.lzyzsd.jsbridge.BridgeUtil;
 import com.github.lzyzsd.jsbridge.BridgeWebView;
 import com.github.lzyzsd.jsbridge.BridgeWebViewClient;
 import com.github.lzyzsd.jsbridge.CallBackFunction;
 import com.github.lzyzsd.jsbridge.DefaultHandler;
+import com.tencent.smtt.sdk.WebChromeClient;
+import com.tencent.smtt.sdk.WebSettings;
+import com.tencent.smtt.sdk.WebView;
+import com.tencent.smtt.sdk.WebViewClient;
 
 import org.altbeacon.beacon.Beacon;
 import org.altbeacon.beacon.BeaconConsumer;
@@ -86,30 +86,14 @@ public class PWebView extends FrameLayout implements BeaconConsumer, RangeNotifi
 
     protected void init() {
         webView = new BridgeWebView(this.getContext());
+        webView.setVerticalFadingEdgeEnabled(false);
+        webView.setOverScrollMode(OVER_SCROLL_NEVER);
         initWebView();
         webView.setWebViewClient(new BridgeWebViewClient(webView) {
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
-                if (webViewClient != null) {
-                    webViewClient.onPageFinished(view, url);
-                }
-            }
-
-            @Override
-            public void onPageStarted(WebView view, String url, Bitmap favicon) {
-                super.onPageStarted(view, url, favicon);
-                if (webViewClient != null) {
-                    webViewClient.onPageStarted(view, url,favicon);
-                }
-            }
-
-            @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                if (webViewClient != null) {
-                    return webViewClient.shouldOverrideUrlLoading(view, url);
-                }
-                return super.shouldOverrideUrlLoading(view, url);//不处理
+                BridgeUtil.webViewLoadLocalJs(webView, BRIDGE_PATH);
             }
         });
         this.addView(webView, LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);

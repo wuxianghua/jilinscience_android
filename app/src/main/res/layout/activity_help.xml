@@ -23,7 +23,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="吉林科技馆"
+            android:text="吉林省科技馆"
             android:textColor="#2F3336"
             android:textSize="15sp"/>
     </RelativeLayout>

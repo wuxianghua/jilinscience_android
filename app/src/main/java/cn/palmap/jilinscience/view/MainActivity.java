@@ -3,7 +3,6 @@ package cn.palmap.jilinscience.view;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -138,7 +137,7 @@ public class MainActivity extends BaseActivity implements FragmentTabController.
         mReLoginAction = mReLoginIntent.getAction();
     }
 
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
+    /*public boolean onKeyDown(int keyCode, KeyEvent event) {
         if ((keyCode == KeyEvent.KEYCODE_BACK)
                 && 0 == fragmentTabController.getCurrentTabPosition()
                 && ((HomePageFragment) fragmentTabController.getCurrentFragment()).canGoBack()){
@@ -146,7 +145,7 @@ public class MainActivity extends BaseActivity implements FragmentTabController.
             return true;
         }
         return super.onKeyDown(keyCode, event);
-    }
+    }*/
 
     @Override
     public void onTabChanged(int oldPosition, int newPosition) {
